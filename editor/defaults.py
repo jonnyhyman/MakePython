@@ -1,3 +1,5 @@
+
+
 color_mode = False
 font_size = 12
 message_time = 5.0  # seconds to keep the message window open

@@ -1,4 +1,18 @@
 """
+    This file is part of MakePython.
+    MakePython is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    HDCS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with HDCS.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+"""
     Making a change? Here's the make-change checklist!
         1. Make change as needed
             1.1 make sure zip_nam matches zip_url and dl=1!!!!!!!!!!

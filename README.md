@@ -74,3 +74,9 @@ For instance, this architecture also means you could launch your code directly i
   ![Editor Architecture](https://github.com/jonnyhyman/MakePython/blob/master/images/editorarch3.png?raw=true)
 
  In the case that makepython is not in the environment path (accidental deletion, etc...), only the command line interface is lost.
+ 
+ ### License and Issue Reporting
+
+GNU General Public License v3.0
+
+When you find bugs, please report them to the "Issues" tab on this repo!
