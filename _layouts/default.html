@@ -22,7 +22,7 @@
     </section>
 
     <section class="main-content">
-      {{site.github.releases | latest | assets[0] | browser_download_url}}
+      {{site.github.releases | latest.assets[0] | browser_download_url}}
       {{ content }}
 
       <footer class="site-footer">
