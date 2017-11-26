@@ -1,6 +1,6 @@
 # Make Python - Editor, Installer
 
-[Click here to download the Latest Installer](https://github.com/jonnyhyman/MakePython/releases/download/v1.0.0/Make.Python.Installer.exe)
+[See All Releases](https://github.com/jonnyhyman/MakePython/releases)
 
  ![Make Python Editor - Dark](https://github.com/jonnyhyman/MakePython/blob/master/images/dark.png?raw=true)
 ![Make Python Editor - Installer](https://github.com/jonnyhyman/MakePython/blob/master/images/installer.png?raw=true)
@@ -77,7 +77,7 @@ For instance, this architecture also means you could launch your code directly i
 
  In the case that makepython is not in the environment path (accidental deletion, etc...), only the command line interface is lost.
 
- ### License and Issue Reporting
+### License and Issue Reporting
 
 GNU General Public License v3.0
 
