@@ -17,12 +17,11 @@
         <a href="{{ site.github.repository_url }}" class="btn">View on GitHub</a>
       {% endif %}
       {% if site.show_downloads %}
-        <a href="{{ site.github.releases.latest.assets[0].browser_download_url }}" class="btn">Download Windows Installer</a>
+        <a href="https://github.com/jonnyhyman/MakePython/releases/download/v1.0.0/Make.Python.Installer.exe" class="btn">Download Windows Installer v1.0</a>
       {% endif %}
     </section>
 
     <section class="main-content">
-      {{ site.github.releases | latest | assets }}
       {{ content }}
 
       <footer class="site-footer">
