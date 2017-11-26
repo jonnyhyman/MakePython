@@ -1,4 +1,7 @@
 # Make Python - Editor, Installer
+
+[Download the Latest Installer](https://github.com/jonnyhyman/MakePython/releases/download/v1.0.0/Make.Python.Installer.exe)
+
  ![Make Python Editor - Dark](https://github.com/jonnyhyman/MakePython/blob/master/images/dark.png?raw=true)
 ![Make Python Editor - Installer](https://github.com/jonnyhyman/MakePython/blob/master/images/installer.png?raw=true)
 
