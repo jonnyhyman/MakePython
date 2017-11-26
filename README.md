@@ -50,6 +50,7 @@
 	* Python auto-complete
 	* Better undo/redo with cursor selections
 	* Fused code line numbers and scroll bar
+  * Custom text editor class (not native QTextEdit)
 
 ### Editor Architecture
 
@@ -76,6 +77,14 @@ For instance, this architecture also means you could launch your code directly i
   ![Editor Architecture](https://github.com/jonnyhyman/MakePython/blob/master/images/editorarch3.png?raw=true)
 
  In the case that makepython is not in the environment path (accidental deletion, etc...), only the command line interface is lost.
+
+### Contributing
+__Helping to make an editor worthy of the Python language.__
+
+Python is a language catalyzed and enabled by an __amazing__ community of passionate software designers and engineers.
+
+I welcome contributions to MakePython with the same spirit that has carried Python so far! I will evaluate pull requests / merges weekly, and welcome new ideas, branches, and features.
+
 
 ### License and Issue Reporting
 
