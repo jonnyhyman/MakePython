@@ -278,7 +278,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
 
         if self.file != '':
             # check for diffs
-            with open(self.file,'r') as f:
+            with open(self.file,'r',encoding='utf-8') as f:
                 saved_text = f.read()
 
             saved_text = saved_text.replace('    ','\t')  # indent consistency
@@ -643,7 +643,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
                 self.file = str(self.o_file)
 
             try:
-                with open(self.file,'r') as f:
+                with open(self.file,'r',encoding="Latin-1") as f:
 
                     try:
                         open_file_text = f.read()
@@ -700,7 +700,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
             # Convert all '\t' characters into quad spaces
             editor_text = editor_text.replace('\t','    ')
 
-            f = open(self.file,'w')
+            f = open(self.file,'w',encoding='utf-8')
             f.write(editor_text)
             f.close()
 
@@ -729,7 +729,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
             to_run = self.textEdit.textCursor().selectedText()
             to_run = to_run.replace(u"\u2029",'\n')  # QString --> utf-8
 
-            with open('run_in_shell.py','w') as temp_py:
+            with open('run_in_shell.py','w',encoding='utf-8') as temp_py:
                 temp_py.write(to_run)
 
             command = 'python -i run_in_shell.py'
@@ -782,7 +782,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         #  -> if we're inside some module's __init__ file
         #     -> we assume module devs made good decisions w.r.t. import exec
 
-        with open(self.file,'r') as f:
+        with open(self.file,'r',encoding='utf-8') as f:
             content = f.read()
 
         content = content.replace(' ','').replace('"','').replace("'",'')
@@ -969,7 +969,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         # can't seem to find the __enter__ method. Weird
 
         try:
-            f = open(self.root + 'defaults.py','r')
+            f = open(self.root + 'defaults.py','r',encoding='utf-8')
             txt = f.read()
             beg = txt.index(var_name)
             end = txt.index('\n',txt.index(var_name))
@@ -977,7 +977,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
             txt = txt.replace(col, var_name + ' = ' + str(value))
             f.close()
 
-            f = open(self.root + 'defaults.py','w')
+            f = open(self.root + 'defaults.py','w',encoding='utf-8')
             f.write(txt)
             f.close()
 
