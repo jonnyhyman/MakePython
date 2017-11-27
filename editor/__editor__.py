@@ -18,6 +18,7 @@ from PyQt5.QtCore import pyqtSlot
 from subprocess import Popen
 from platform import system
 import utilities as utils
+import __option__ as opt
 import __pipwin__ as pip
 import importlib.util
 import defaults
@@ -713,11 +714,16 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
 
             self.saveState(1)
 
+    def toSaveOrNotToSave(self):
+        self.option = opt.Option(['Save','Leave'],[self.save,lambda: None],self)
+
     def closeEvent(self,event):
         """ upon window close """
         if not self.isSaved():
-            self.save()
+            self.toSaveOrNotToSave()
 
+        # delete the temporary file which we use to run commands in shell
+        # with selections
         if os.path.isfile('run_in_shell.py'):
             os.remove('run_in_shell.py')
 
