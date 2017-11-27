@@ -274,8 +274,8 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
     def textChange(self):
         """ actions upon change of text """
 
-        self.applyBlockLineHeight()
         self.captureHistory()
+        # self.applyBlockLineHeight()
 
         if self.file != '':
             # check for diffs
@@ -617,9 +617,9 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         if self.file != '': # can still happen if user canceled save
 
             if self.system == 'Windows':
-                os.system('start cmd /K python '+self.file)
+                os.system('start cmd /K python "'+self.file+'"')
             else:
-                Popen('python '+self.file, shell=True)
+                Popen('python "'+self.file+'"', shell=True)
 
     def new(self):
         """ new program """
