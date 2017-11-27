@@ -23,8 +23,8 @@
         4. test remotely / fresh install
 """
 
-zip_nam = 'editor-1-0-0'
-zip_url = "https://github.com/jonnyhyman/MakePython/files/1504151/editor-1-0-0.zip"
+zip_nam = 'editor-1-0-1'
+zip_url = "https://github.com/jonnyhyman/MakePython/files/1507802/editor-1-0-1.zip"
 pythonorg_root = "https://www.python.org/ftp/python/"
 delete_log_after = False
 pip_dependencies = {'PyQt5':'pyqt5'} # foldername / pypi name

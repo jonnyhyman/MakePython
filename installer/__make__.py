@@ -240,8 +240,8 @@ def run_installer():
         app = QtWidgets.QApplication(sys.argv)
 
         # COMMENT THE NEXT TWO LINES IF TESTING AS A .PY FILE
-        #QtGui.QFontDatabase.addApplicationFont(sys._MEIPASS+'/fonts/DaisyScript.ttf')
-        #QtGui.QFontDatabase.addApplicationFont(sys._MEIPASS+'/fonts/LemonMilklight.otf')
+        QtGui.QFontDatabase.addApplicationFont(sys._MEIPASS+'/fonts/DaisyScript.ttf')
+        QtGui.QFontDatabase.addApplicationFont(sys._MEIPASS+'/fonts/LemonMilklight.otf')
 
         gui  = Interface()
         gui.show()
