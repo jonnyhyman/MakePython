@@ -644,7 +644,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
                 self.file = str(self.o_file)
 
             try:
-                with open(self.file,'r',encoding="Latin-1") as f:
+                with open(self.file,'r',encoding="utf-8") as f:
 
                     try:
                         open_file_text = f.read()
@@ -692,7 +692,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
             self.file = QtWidgets.QFileDialog.getSaveFileName(self,
                                            'Save Python File', filter = '*.py')
 
-            self.file = self.file[0] # 0 = path, 1 = format
+            self.file = self.file[0]  # 0 = path, 1 = format
 
         if self.file != '':
 
@@ -701,7 +701,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
             # Convert all '\t' characters into quad spaces
             editor_text = editor_text.replace('\t','    ')
 
-            f = open(self.file,'w',encoding='utf-8')
+            f = open(self.file, 'w', encoding='utf-8')
             f.write(editor_text)
             f.close()
 
