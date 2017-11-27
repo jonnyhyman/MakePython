@@ -19,7 +19,6 @@ from zipfile import ZipFile
 import utilities as utils
 from shutil import rmtree
 import install_globals
-import font_installer
 import urllib.request
 import platform
 import winshell
@@ -155,7 +154,21 @@ class install:
 
         #--------------------------------------- Additional os-specific setup
 
+        # if running win8, there is a windows bug that prevents proper startup.
+        # send the user a message to notify they'll need to restart
+
+        # CAUSE = (
+        # "https://superuser.com/questions/593949/why-wont-my-windows-8-command"
+        # "line-update-its-path"
+        # )
+
+        if '8' in platform.win32_ver()[0]:
+            self.ui.sendmessage("Due to a Microsoft Windows 8 bug, you should"
+                                " reboot after installation everything to work"
+                                " correctly. Sorry!")
+
         # create desktop and start menu shortcuts
+
         desktop = winshell.desktop()
         startmenu = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu'
 

@@ -100,17 +100,20 @@ class Interface(QtWidgets.QMainWindow, installer.Ui_Install):
         else:
             self.unmake()
 
+    def sendmessage(self,msg):
+        """ send a message to the user """
+        self.message.setText(msg)
+        self.message.setVisible(1)
+
     def unmake(self):
         """ uninstall the editor """
 
         self.uninstall = True
         self.installbutton.setText("REMOVING EDITOR")
 
-        self.message.setText("This program only removes the Make Python Editor."
-                             " To remove Python itself, follow your OS-specific"
-                             " uninstallation process")
-        self.message.setVisible(1)
-
+        self.sendmessage("This program only removes the Make Python Editor."
+                         " To remove Python itself, follow your OS-specific"
+                         " uninstallation process")
 
         # First, check that it's even instaled in the first place!
 
@@ -237,8 +240,8 @@ def run_installer():
         app = QtWidgets.QApplication(sys.argv)
 
         # COMMENT THE NEXT TWO LINES IF TESTING AS A .PY FILE
-        QtGui.QFontDatabase.addApplicationFont(sys._MEIPASS+'/fonts/DaisyScript.ttf')
-        QtGui.QFontDatabase.addApplicationFont(sys._MEIPASS+'/fonts/LemonMilklight.otf')
+        #QtGui.QFontDatabase.addApplicationFont(sys._MEIPASS+'/fonts/DaisyScript.ttf')
+        #QtGui.QFontDatabase.addApplicationFont(sys._MEIPASS+'/fonts/LemonMilklight.otf')
 
         gui  = Interface()
         gui.show()

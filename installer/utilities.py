@@ -201,7 +201,7 @@ def set_context_menu(mp_exec, undo=False):
 
 
             REG_PATH = 'Python.File\\Shell\\Edit with Make Python\command'
-            COMMAND  = '''"''' + mp_exec + '''" %L'''
+            COMMAND  = '''"''' + mp_exec + '''" "%L"'''
             NAME = '' # (Default)
 
             print('SET_REG >> SET [', REG_PATH, '] KEY "', NAME,'" TO', COMMAND)

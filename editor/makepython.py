@@ -186,8 +186,9 @@ if __name__ == '__main__':
 
         makepython_editor = mp_dir + '\\__editor__.py'
 
-        # Ensure pyqt bin is visible
-        os.environ['PATH'] = os.environ['PATH'] +';'+ (py_dir + '\\Lib\\site-packages\\PyQt5\\Qt\\bin')
+        # Ensure pyqt bin is visible for this session
+        temp_path_append = (py_dir + '\\Lib\\site-packages\\PyQt5\\Qt\\bin')
+        os.environ['PATH'] = os.environ['PATH'] +';'+ temp_path_append
 
         if len(files_to_open) > 0:
 
