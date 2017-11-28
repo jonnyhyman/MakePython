@@ -30,6 +30,11 @@ import editor
 import sys
 import os
 
+"""     UI_REFACTOR0 BRANCH OBJECTIVE:
+
+        -> Place textEdit object into its own class for better low level control
+"""
+
 class ActionWatcher(QtCore.QObject):
     def __init__(self,parent=None):
         """ This class is solely for intercepting events """
@@ -46,7 +51,6 @@ class ActionWatcher(QtCore.QObject):
                 else:
                     self.parent.changeFontSize(-1)
                 return 1
-
 
         if (obj == self.parent.textEdit and event.type() == QtCore.QEvent.KeyPress ):
 
@@ -70,6 +74,7 @@ class ActionWatcher(QtCore.QObject):
                     self.parent.indent()
                     return 1
             """
+            """
             # because who needs the Qt Undo Framework, anyway?
             if event.modifiers() == QtCore.Qt.ControlModifier:
                 if event.key() == QtCore.Qt.Key_Z:
@@ -77,13 +82,13 @@ class ActionWatcher(QtCore.QObject):
 
                 if event.key() == QtCore.Qt.Key_Y:
                     self.parent.redoText()
+                """
 
             if event.key() in [QtCore.Qt.Key_ParenLeft,   # ()
                                QtCore.Qt.Key_BracketLeft, # []
                                QtCore.Qt.Key_BraceLeft]:  # {}
                 self.parent.braceHelper(event.key())
                 return 1
-
 
         return self.parent.eventFilter(obj,event)
 
@@ -230,6 +235,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         self.colorbutton.clicked.connect(self.flipTheme)
         self.findbutton.clicked.connect(self.find)
 
+    '''
     def undoText(self):
         """ undo the latest text """
         if len(self.undo) > 1:
@@ -258,6 +264,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
             c.setPosition(self.redo[-1][1])
             self.textEdit.setTextCursor(c)
             self.redo.pop(-1)
+    '''
 
     def captureHistory(self):
         """ capture current text state, and cursor state """
