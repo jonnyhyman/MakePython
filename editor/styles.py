@@ -16,6 +16,7 @@ syntax_colors = {
     0:{ # dark syntax theme
         'default' :('#abb2bf'),
         'keyword' :('#c678dd',),
+        'builtins':('#56B6C2',),
         'operator':('#c678dd','bold'),
         'brace'   :('#abb2bf',),
         'brace_h' :('#568AF2','bold'),
@@ -23,12 +24,13 @@ syntax_colors = {
         'string'  :('#98c379',),
         'string2' :('#98c379',),
         'comment' :('#5a6370','italic'),
-        'self'    :('#e06c75','bold'),
+        'self'    :('#e06c75',),
         'numbers' :('#d19a64',),
     },
     1:{ # light syntax theme
         'default' :('black'),
         'keyword' :('#0023A4',),
+        'builtins':('#56B6C2',),
         'operator':('#D77915','bold'),
         'brace'   :('#25193E',),
         'brace_h' :('#568AF2','bold'),

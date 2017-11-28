@@ -35,13 +35,6 @@ def char_format(color, style=''):
 
     return c_format
 
-class HighlightingRule():
-
-    def __init__( self, pattern, format ):
-
-        self.pattern = pattern
-        self.format = format
-
 class PythonHighlighter (QSyntaxHighlighter):
     """ Syntax highlighter for the Python language.
         Courtesy of http://bit.ly/2j6ouqV """
@@ -54,6 +47,11 @@ class PythonHighlighter (QSyntaxHighlighter):
         'is', 'lambda', 'not', 'or', 'pass', 'print',
         'raise', 'return', 'try', 'while', 'yield',
         'None', 'True', 'False', 'with', 'as', 'TODO:',
+
+    ]
+
+    builtins = [
+        '__init__','dict','str','bytes','tuple','list','float','int','long'
     ]
 
     # Python operators
@@ -91,6 +89,7 @@ class PythonHighlighter (QSyntaxHighlighter):
 
         self.STYLES = {
             'keyword' : char_format(*styles.syntax_colors[color_mode]['keyword']),
+            'builtins': char_format(*styles.syntax_colors[color_mode]['builtins']),
             'operator': char_format(*styles.syntax_colors[color_mode]['operator']),
             'brace'   : char_format(*styles.syntax_colors[color_mode]['brace']),
             'brace_h' : char_format(*styles.syntax_colors[color_mode]['brace_h']),
@@ -107,9 +106,11 @@ class PythonHighlighter (QSyntaxHighlighter):
 
         rules = []
 
-        # Keyword, operator, and brace rules
+        # Keyword, builtins operator, and brace rules
         rules += [(r'\b%s\b' % w, 0, self.STYLES['keyword'])
             for w in PythonHighlighter.keywords]
+        rules += [(r'\b%s\b' % w, 0, self.STYLES['builtins'])
+            for w in PythonHighlighter.builtins]
         rules += [(r'%s' % o, 0, self.STYLES['operator'])
             for o in PythonHighlighter.operators]
         rules += [(r'%s' % b, 0, self.STYLES['brace'])
@@ -136,7 +137,8 @@ class PythonHighlighter (QSyntaxHighlighter):
             # Numeric literals
             (r'\b[+-]?[0-9]+[lL]?\b', 0, self.STYLES['numbers']),
             (r'\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b', 0, self.STYLES['numbers']),
-            (r'\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b', 0, self.STYLES['numbers']),
+            (r'\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b', 0,
+                                                        self.STYLES['numbers']),
         ]
 
         # Build a QRegExp for each pattern
@@ -209,7 +211,7 @@ class PythonHighlighter (QSyntaxHighlighter):
             return False
 
     def braceSearch(self, text, block, in_block_pos, search_direction):
-        ''' see Interface.textCursorChange '''
+        ''' search for start and end braces '''
         count = 1
         search_block = block
         total_number_of_blocks = len(self.document.toPlainText().split('\n'))
@@ -257,10 +259,12 @@ class PythonHighlighter (QSyntaxHighlighter):
                         #print('        ',n,c)
 
                         if c == utils.brotherBrace(text[in_block_pos-1]):
-                        #    print('           ',c,'==',utils.brotherBrace(text[in_block_pos-1]),'->',count)
+                        #    print('           ',c,'==',
+                        #utils.brotherBrace(text[in_block_pos-1]),'->',count)
                             count -= 1
                         #else:
-                        #    print('           ',c,'!=',utils.brotherBrace(text[in_block_pos-1]),'->',count)
+                        #    print('           ',c,'!=',
+                        #utils.brotherBrace(text[in_block_pos-1]),'->',count)
 
                         if c == text[in_block_pos-1]:
                             count += 1
@@ -277,9 +281,9 @@ class PythonHighlighter (QSyntaxHighlighter):
 
         return None, None
 
-    #@timeit
     def braceMatcher(self):
-        ''' see Interface.textCursorChange '''
+        ''' Do brace matching for all kinds of braces '''
+
         cursor = self.document.textCursor()
         in_block_pos = cursor.positionInBlock()
         block  = cursor.block()
@@ -287,72 +291,96 @@ class PythonHighlighter (QSyntaxHighlighter):
 
         if len(text)>0 and (text[in_block_pos-1] in ['{','[','(','}',']',')']):
 
-            self.clearBraceHighlights()
-
-            #print('  start : inblock-->',in_block_pos-1,'| blockN-->',block.blockNumber(),'| got brace -->',text[in_block_pos-1])
+            #print('  start : inblock-->',in_block_pos-1,'| blockN-->',
+            #block.blockNumber(),'| got brace -->',text[in_block_pos-1])
 
             if text[in_block_pos-1] in ['{','[','(']: # look forwards
 
-                end_block, end_in_block_pos = self.braceSearch(text,block,in_block_pos,1)
+                end_block, end_in_block_pos = self.braceSearch(text,
+                                                               block,
+                                                               in_block_pos,
+                                                               1)
 
             else:
                 if in_block_pos > 0:
-                    end_block, end_in_block_pos = self.braceSearch(text,block,in_block_pos,-1)
+                    end_block, end_in_block_pos = self.braceSearch(text,
+                                                                   block,
+                                                                   in_block_pos,
+                                                                   -1)
                 else:
                     end_block = None
 
             #if end_block is not None:
-                #print('  end   : inblock-->',end_in_block_pos,'| blockN-->',end_block.blockNumber(),'| in text -->',end_block.text())
+                #print('  end   : inblock-->',end_in_block_pos,'| blockN-->',
+                #end_block.blockNumber(),'| in text -->',end_block.text())
             #else:
                 #print('  no end')
 
             # now that we know where the start / end are, style them!
 
-            if end_block is not None:
+            csr = self.document.textCursor()
+            csr.joinPreviousEditBlock()  # this is critical to maintaining
+                                         # a correct undo/redo log
 
-                self.setBraceFormat(block, in_block_pos-1, True)
-                self.setBraceFormat(end_block, end_in_block_pos, True)
+            if end_block is not None:
+                self.setBraceFormats(csr,[(block, in_block_pos-1, True),
+                                          (end_block, end_in_block_pos, True)])
 
             else:
-                self.setBraceFormat(block, in_block_pos-1, False)
+
+                self.setBraceFormats(csr,
+                                     [(block, in_block_pos-1, False)])
+
+            csr.endEditBlock()  # end with respect to joinPreviousEditBlock
 
         else:
 
             self.clearBraceHighlights()
 
     def clearBraceHighlights(self):
-        ''' see Interface.textCursorChange '''
+        ''' Clear all highlighted braces '''
 
+        braces = []
         for n, block_in_block_pos in enumerate(self.highlighted_braces):
 
             block, in_block_pos = block_in_block_pos
-            self.setBraceFormat(block, in_block_pos, False)
-
-        self.highlighted_braces = [] # reset
-
-    def setBraceFormat(self, block, in_block_pos, highlight):
-        ''' see Interface.textCursorChange '''
+            braces.append((block, in_block_pos, False))
 
         csr = self.document.textCursor()
+        csr.joinPreviousEditBlock()  # this is critical to maintaining
+                                     # a correct undo/redo log
 
-        # navigate to the brace and select it
+        self.setBraceFormats(csr, braces)
+        self.highlighted_braces = [] # reset
 
-        csr.setPosition(block.position() + in_block_pos) # absolute
-        csr.movePosition(QTextCursor.NextCharacter,  # select brace
-                            mode=QTextCursor.KeepAnchor)
+        csr.endEditBlock()  # end with respect to joinPreviousEditBlock
 
-        #print('    highlighting :' if highlight else '    unhighlighting :',
-        #     csr.selection().toPlainText(), 'at', in_block_pos)
+    def setBraceFormats(self, csr, braces):
+        ''' Set a bunch of brace formats '''
 
-        if highlight:
+        for brace in braces:
 
-            self.STYLES['brace_h'].setFontPointSize(self.fontsize)
+            block, in_block_pos, highlight = brace
 
-            csr.setCharFormat(self.STYLES['brace_h'])
-            self.highlighted_braces.append((block, in_block_pos))
+            # navigate to the brace and select it
 
-        else:
+            #csr = self.document.textCursor()
+            csr.setPosition(block.position() + in_block_pos) # absolute
+            csr.movePosition(QTextCursor.NextCharacter,  # select brace
+                      mode = QTextCursor.KeepAnchor)
 
-            self.STYLES['brace'].setFontPointSize(self.fontsize)
+            #print('  highlighting :' if highlight else '  unhighlighting :',
+            #     csr.selection().toPlainText(), 'at', in_block_pos)
 
-            csr.setCharFormat(self.STYLES['brace'])
+            if highlight:
+
+                self.STYLES['brace_h'].setFontPointSize(self.fontsize)
+
+                csr.setCharFormat(self.STYLES['brace_h'])
+                self.highlighted_braces.append((block, in_block_pos))
+
+            else:
+
+                self.STYLES['brace'].setFontPointSize(self.fontsize)
+
+                csr.setCharFormat(self.STYLES['brace'])

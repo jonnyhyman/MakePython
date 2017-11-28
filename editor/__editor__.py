@@ -30,6 +30,14 @@ import editor
 import sys
 import os
 
+"""     UI_REFACTOR0 BRANCH OBJECTIVE:
+
+        -> Fix undo/redo hack #6, #4
+        -> Fix line vanishing problem #5
+        -> Fix window width issue #7
+
+"""
+
 class ActionWatcher(QtCore.QObject):
     def __init__(self,parent=None):
         """ This class is solely for intercepting events """
@@ -47,7 +55,6 @@ class ActionWatcher(QtCore.QObject):
                     self.parent.changeFontSize(-1)
                 return 1
 
-
         if (obj == self.parent.textEdit and event.type() == QtCore.QEvent.KeyPress ):
 
             # if we don't clear brace highlights every keypress,
@@ -61,7 +68,8 @@ class ActionWatcher(QtCore.QObject):
                 self.parent.indentationMatch()
                 return 1
 
-            """ # Currently deprecated due to newline eating problem - see Issues
+            # Currently deprecated due to newline eating problem - see Issues
+
             if event.key() in [QtCore.Qt.Key_Tab, QtCore.Qt.Key_Backtab]:
                 if event.modifiers() == QtCore.Qt.ShiftModifier:
                     self.parent.deIndent()
@@ -69,14 +77,16 @@ class ActionWatcher(QtCore.QObject):
                 else:
                     self.parent.indent()
                     return 1
-            """
-            # because who needs the Qt Undo Framework, anyway?
-            if event.modifiers() == QtCore.Qt.ControlModifier:
-                if event.key() == QtCore.Qt.Key_Z:
-                    self.parent.undoText()
 
-                if event.key() == QtCore.Qt.Key_Y:
-                    self.parent.redoText()
+            if event.key() == QtCore.Qt.Key_BracketLeft:
+                if event.modifiers() == QtCore.Qt.ControlModifier:
+                    self.parent.deIndent()
+                    return 1
+
+            if event.key() == QtCore.Qt.Key_BracketRight:
+                if event.modifiers() == QtCore.Qt.ControlModifier:
+                    self.parent.indent()
+                    return 1
 
             if event.key() in [QtCore.Qt.Key_ParenLeft,   # ()
                                QtCore.Qt.Key_BracketLeft, # []
@@ -230,35 +240,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         self.colorbutton.clicked.connect(self.flipTheme)
         self.findbutton.clicked.connect(self.find)
 
-    def undoText(self):
-        """ undo the latest text """
-        if len(self.undo) > 1:
-
-            self.redo.append(self.undo.pop(-1))
-
-            # apply text and clean up visuals
-            self.textEdit.setPlainText(self.undo[-1][0])
-            #self.applyBlockLineHeight_toAllLines()
-
-            c = self.textEdit.textCursor()
-            c.setPosition(self.undo[-1][1])
-            self.textEdit.setTextCursor(c)
-
-            self.undo.pop(-1) # delete the text-change-event-added duplicate
-
-    def redoText(self):
-        """ redo the last text """
-        if len(self.redo) > 1:
-            # apply text and clean up visuals
-            self.textEdit.setPlainText(self.redo[-1][0])
-            #self.applyBlockLineHeight_toAllLines()
-
-            # apply cursor
-            c = self.textEdit.textCursor()
-            c.setPosition(self.redo[-1][1])
-            self.textEdit.setTextCursor(c)
-            self.redo.pop(-1)
-
     def captureHistory(self):
         """ capture current text state, and cursor state """
 
@@ -275,7 +256,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         """ actions upon change of text """
 
         self.captureHistory()
-        # self.applyBlockLineHeight()
 
         if self.file != '':
             # check for diffs
@@ -288,39 +268,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
                 self.saveState(0)
             else:
                 self.saveState(1)
-
-    def applyBlockLineHeight(self):
-        """ apply default line height to a block """
-
-        self.textEdit.blockSignals(True)
-
-        block_format = self.textEdit.textCursor().block().blockFormat()
-        block_format.setLineHeight(defaults.line_height,
-                                   QtGui.QTextBlockFormat.ProportionalHeight)
-
-        self.textEdit.textCursor().setBlockFormat(block_format)
-
-        self.textEdit.blockSignals(False)
-
-    def applyBlockLineHeight_toAllLines(self):
-        """ especially when opening file, apply line height to all lines """
-
-        return  # CURRENLY DEPRECATED AWAITING FASTER ALGORITHM!
-
-        cursor = self.textEdit.textCursor()
-        blocks = self.textEdit.toPlainText().split('\n')
-
-        cursor.setPosition(0)
-        block = cursor.block()
-
-        for n, _ in enumerate(blocks):
-            cursor.setPosition(block.position())
-            self.textEdit.setTextCursor(cursor)
-            self.applyBlockLineHeight()
-            block = block.next()
-
-        cursor.setPosition(0)
-        self.textEdit.setTextCursor(cursor)
 
     def indentationMatch(self):
         """ match indentation upon newline """
@@ -336,90 +283,44 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         """ perform an indent or deindent operation """
 
         cursor = self.textEdit.textCursor()
-        indentation = cursor.selection().toPlainText()
 
-        if cursor.hasSelection() and '\n' in indentation:
-
-            # if we have a multiline selection
-
-            oneBlockSelection = False
-            new_indentation = []
-
-            tab_delta = 0
-            for line in indentation.split('\n'):
-                if len(line) and line[0] == '\t': # if theres a tab in block
-                    if de:
-                        tab_delta -= 1
-                        new_indentation.append(line[1:])
-                    else:
-                        tab_delta += 1
-                        new_indentation.append('\t'+line)
-                else:
-                    if de:
-                        new_indentation.append(line) # if no tab, just add line
-                    else:
-                        tab_delta += 1
-                        new_indentation.append('\t'+line)
-
-            indentation = ''.join([line+'\n' for line in new_indentation])
-
-            indentation = indentation[:-1] # delete trailing newline
-
-            end_position = (cursor.selectionStart(),
-                            cursor.selectionEnd() + tab_delta)
-
-        else:
-            oneBlockSelection = True
-
-        if oneBlockSelection or not cursor.hasSelection():
-
-            # if we've just selected on one line or no selection at all
-            tab_delta = -1 if de else +1
-
-            end_position = cursor.position() + tab_delta
-
-            block = cursor.block().text()
-
-            print('before:',bytes(block,'utf-8'))
-
-            if de and block[0] == '\t':
-                print('rule1')
-                indentation = '\n'+block[1:]
-            elif not de:
-                print('rule2')
-                indentation = '\t'+block
-            else:
-                print('rule3')
-                indentation = block
-
-            print('after:',bytes(indentation,'utf-8'))
+        if not cursor.hasSelection():
+            # single line dentation
 
             cursor.select(QtGui.QTextCursor.BlockUnderCursor)
 
-        cursor.insertText(indentation)
+            # QString --> utf-8
+            selected = cursor.selectedText().replace(u"\u2029",'\n')
 
-        if type(end_position) == int:
-            cursor.setPosition(end_position)
-            self.textEdit.setTextCursor(cursor)
-        else:
-            print(end_position)
-            cursor.setPosition(end_position[0])
-            cursor.movePosition(QtGui.QTextCursor.NextCharacter,
-                                mode = QtGui.QTextCursor.KeepAnchor,
-                                n = end_position[1]-end_position[0])
-            self.textEdit.setTextCursor(cursor)
+            if de:  # DETABBING
+                if len(selected) > 0:  # if line has some length
+                    if selected[0] == '\t':  # if b'\tblock'
+                        new_kid_on_the_block = selected[1:] # del 0th '\t'
+
+                    elif selected[0:2] == '\n\t':  # if b'\n\tblock'
+                        new_kid_on_the_block = '\n'+selected[2:] # do '\nblock'
+
+                    else:  # not 0th = '\t' AND not '\n\t'
+                        new_kid_on_the_block = selected
+
+                else:
+                    new_kid_on_the_block = selected
+
+            else:  # NOT DETABBING
+                if len(selected) > 0 and selected[0] == '\n':
+                    new_kid_on_the_block = '\n' + '\t' + selected[1:]
+                else:  # if clean line OR 0th not '\n'
+                    new_kid_on_the_block = '\t' + selected
+
+            cursor.insertText(new_kid_on_the_block)
 
     def indent(self):
         """ indent a group of selected text or the current block """
-
-        print('indent')
         self.dent(de=False)
 
 
     def deIndent(self):
         """ de-indent the selected text or current block """
-
-        print('deindent!')
         self.dent(de=True)
 
 
@@ -452,8 +353,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         blocks[swap_with] = block_text
 
         self.textEdit.setPlainText(''.join([blk+'\n' for blk in blocks]))
-        self.applyBlockLineHeight_toAllLines() # without this, line heights
-                                               # are not preserved
 
         if direction == -1:
             cursor.setPosition(block_pos + inblock_pos + len(swap_with_text+'\n'))
@@ -589,7 +488,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         self.textEdit.setDocument(d)
 
         self.textEdit.setPlainText(self.textEdit.toPlainText())
-        self.applyBlockLineHeight_toAllLines()
 
         # get tab size right
         metrics = QtGui.QFontMetrics(self.editor_font)
@@ -660,8 +558,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
 
                     self.textEdit.setPlainText(open_file_text)
 
-                    self.applyBlockLineHeight_toAllLines()
-
                     self.textChange()
 
             except FileNotFoundError:
@@ -714,13 +610,17 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
 
             self.saveState(1)
 
-    def toSaveOrNotToSave(self):
-        self.option = opt.Option(['Save','Leave'],[self.save,lambda: None],self)
+    def toSaveOrNotToSave(self, event):
+        """ open option dialog with save, leave, and cancel options """
+        self.option = opt.Option(['Save','Leave'],[ event.ignore, # Cancel
+                                                    self.save,    # Left
+                                                    lambda: None, # Right
+                                                   ], self)
 
     def closeEvent(self,event):
         """ upon window close """
         if not self.isSaved():
-            self.toSaveOrNotToSave()
+            self.toSaveOrNotToSave(event)
 
         # delete the temporary file which we use to run commands in shell
         # with selections
