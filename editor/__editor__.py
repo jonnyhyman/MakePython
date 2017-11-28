@@ -34,6 +34,7 @@ import os
 
         -> Fix undo/redo hack #6, #4
         -> Fix line vanishing problem #5
+        -> Fix window width issue #7
 
 """
 

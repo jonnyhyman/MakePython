@@ -109,7 +109,7 @@ QPushButton::pressed{
       <item>
        <widget class="QPlainTextEdit" name="findText">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -171,7 +171,7 @@ QPushButton::pressed{
       <item>
        <widget class="QPlainTextEdit" name="replaceText">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -422,7 +422,7 @@ p, li { white-space: pre-wrap; }
     <item row="3" column="2">
      <widget class="QTextEdit" name="messageText">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
