@@ -610,13 +610,17 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
 
             self.saveState(1)
 
-    def toSaveOrNotToSave(self):
-        self.option = opt.Option(['Save','Leave'],[self.save,lambda: None],self)
+    def toSaveOrNotToSave(self, event):
+        """ open option dialog with save, leave, and cancel options """
+        self.option = opt.Option(['Save','Leave'],[ event.ignore, # Cancel
+                                                    self.save,    # Left
+                                                    lambda: None, # Right
+                                                   ], self)
 
     def closeEvent(self,event):
         """ upon window close """
         if not self.isSaved():
-            self.toSaveOrNotToSave()
+            self.toSaveOrNotToSave(event)
 
         # delete the temporary file which we use to run commands in shell
         # with selections

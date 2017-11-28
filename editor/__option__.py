@@ -27,19 +27,19 @@ import os
 
 class Option(QtWidgets.QDialog, option.Ui_Option):
 
-    def __init__(self, left_right, left_right_funcs, ui):
+    def __init__(self, left_right, control_funcs, ui):
 
         super(self.__class__, self).__init__()
         self.setupUi(self)
 
         self.ui = ui
-        self.functions = left_right_funcs
+        self.functions = control_funcs
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
-        self.unix_close.clicked.connect(self.close)
-        self.win_close.clicked.connect(self.close)
+        self.unix_close.clicked.connect(self.cancel)
+        self.win_close.clicked.connect(self.cancel)
 
         self.left.setText(left_right[0])
         self.right.setText(left_right[1])
@@ -48,7 +48,7 @@ class Option(QtWidgets.QDialog, option.Ui_Option):
         self.right.clicked.connect(self.returnRight)
 
         self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Escape"),self)
-        self.shortcut.activated.connect(self.close)
+        self.shortcut.activated.connect(self.close)  # close or cancel?
 
         self.system = platform.system()
 
@@ -67,6 +67,10 @@ class Option(QtWidgets.QDialog, option.Ui_Option):
             self.win_close.setVisible(0)
 
         self.exec_()
+
+    def cancel(self):
+        self.functions[0]()
+        self.close()
 
     def mousePressEvent(self, event):
         "Note position so we can drag window"

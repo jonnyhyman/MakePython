@@ -47,7 +47,11 @@ class PythonHighlighter (QSyntaxHighlighter):
         'is', 'lambda', 'not', 'or', 'pass', 'print',
         'raise', 'return', 'try', 'while', 'yield',
         'None', 'True', 'False', 'with', 'as', 'TODO:',
-        'dict','str','tuple','list',
+
+    ]
+
+    builtins = [
+        '__init__','dict','str','bytes','tuple','list','float','int','long'
     ]
 
     # Python operators
@@ -85,6 +89,7 @@ class PythonHighlighter (QSyntaxHighlighter):
 
         self.STYLES = {
             'keyword' : char_format(*styles.syntax_colors[color_mode]['keyword']),
+            'builtins': char_format(*styles.syntax_colors[color_mode]['builtins']),
             'operator': char_format(*styles.syntax_colors[color_mode]['operator']),
             'brace'   : char_format(*styles.syntax_colors[color_mode]['brace']),
             'brace_h' : char_format(*styles.syntax_colors[color_mode]['brace_h']),
@@ -101,9 +106,11 @@ class PythonHighlighter (QSyntaxHighlighter):
 
         rules = []
 
-        # Keyword, operator, and brace rules
+        # Keyword, builtins operator, and brace rules
         rules += [(r'\b%s\b' % w, 0, self.STYLES['keyword'])
             for w in PythonHighlighter.keywords]
+        rules += [(r'\b%s\b' % w, 0, self.STYLES['builtins'])
+            for w in PythonHighlighter.builtins]
         rules += [(r'%s' % o, 0, self.STYLES['operator'])
             for o in PythonHighlighter.operators]
         rules += [(r'%s' % b, 0, self.STYLES['brace'])
