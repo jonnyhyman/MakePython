@@ -312,7 +312,8 @@ class PythonHighlighter (QSyntaxHighlighter):
             # now that we know where the start / end are, style them!
 
             csr = self.document.textCursor()
-            csr.joinPreviousEditBlock()
+            csr.joinPreviousEditBlock()  # this is critical to maintaining
+                                         # a correct undo/redo log
 
             if end_block is not None:
                 self.setBraceFormats(csr,[(block, in_block_pos-1, True),
@@ -323,7 +324,7 @@ class PythonHighlighter (QSyntaxHighlighter):
                 self.setBraceFormats(csr,
                                      [(block, in_block_pos-1, False)])
 
-            csr.endEditBlock()
+            csr.endEditBlock()  # end with respect to joinPreviousEditBlock
 
         else:
 
@@ -339,18 +340,19 @@ class PythonHighlighter (QSyntaxHighlighter):
             braces.append((block, in_block_pos, False))
 
         csr = self.document.textCursor()
-        csr.joinPreviousEditBlock()
+        csr.joinPreviousEditBlock()  # this is critical to maintaining
+                                     # a correct undo/redo log
 
         self.setBraceFormats(csr, braces)
         self.highlighted_braces = [] # reset
 
-        csr.endEditBlock()
+        csr.endEditBlock()  # end with respect to joinPreviousEditBlock
 
     def setBraceFormats(self, csr, braces):
         ''' Set a bunch of brace formats '''
 
         for brace in braces:
-            
+
             block, in_block_pos, highlight = brace
 
             # navigate to the brace and select it
