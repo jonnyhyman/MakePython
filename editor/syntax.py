@@ -54,6 +54,7 @@ class PythonHighlighter (QSyntaxHighlighter):
         'is', 'lambda', 'not', 'or', 'pass', 'print',
         'raise', 'return', 'try', 'while', 'yield',
         'None', 'True', 'False', 'with', 'as', 'TODO:',
+        'dict','str','tuple','list',
     ]
 
     # Python operators
