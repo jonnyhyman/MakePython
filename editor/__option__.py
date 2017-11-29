@@ -33,6 +33,8 @@ class Option(QtWidgets.QDialog, option.Ui_Option):
         self.setupUi(self)
 
         self.ui = ui
+
+        # 0th element should always correspond to cancel
         self.functions = control_funcs
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
@@ -41,8 +43,8 @@ class Option(QtWidgets.QDialog, option.Ui_Option):
         self.unix_close.clicked.connect(self.cancel)
         self.win_close.clicked.connect(self.cancel)
 
-        self.left.setText(left_right[0])
-        self.right.setText(left_right[1])
+        self.left.setText(left_right[1])
+        self.right.setText(left_right[2])
 
         self.left.clicked.connect(self.returnLeft)
         self.right.clicked.connect(self.returnRight)

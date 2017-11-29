@@ -159,6 +159,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
 
         self.setupFont()
         self.captureHistory()  # prime the undo buffer
+        self.textEdit.setFocus()
 
     def actionSetup(self):
         """ tie in keyboard actions and button presses """
@@ -174,11 +175,14 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence.ZoomOut,self)
         self.shortcut.activated.connect(lambda: self.changeFontSize(-1))
 
-        self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence.Save,self)
-        self.shortcut.activated.connect(self.save)
+        self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence.New,self)
+        self.shortcut.activated.connect(self.new)
 
         self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence.Open,self)
         self.shortcut.activated.connect(self.open)
+
+        self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence.Save,self)
+        self.shortcut.activated.connect(self.save)
 
         self.shortcut = QtWidgets.QShortcut(QtCore.Qt.Key_F5,self)
         self.shortcut.activated.connect(self.launch)
