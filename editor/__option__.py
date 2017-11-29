@@ -27,7 +27,7 @@ import os
 
 class Option(QtWidgets.QDialog, option.Ui_Option):
 
-    def __init__(self, left_right, control_funcs, ui):
+    def __init__(self, setText, control_funcs, ui):
 
         super(self.__class__, self).__init__()
         self.setupUi(self)
@@ -43,8 +43,8 @@ class Option(QtWidgets.QDialog, option.Ui_Option):
         self.unix_close.clicked.connect(self.cancel)
         self.win_close.clicked.connect(self.cancel)
 
-        self.left.setText(left_right[1])
-        self.right.setText(left_right[2])
+        self.left.setText(setText['left'])
+        self.right.setText(setText['right'])
 
         self.left.clicked.connect(self.returnLeft)
         self.right.clicked.connect(self.returnRight)
@@ -71,7 +71,7 @@ class Option(QtWidgets.QDialog, option.Ui_Option):
         self.exec_()
 
     def cancel(self):
-        self.functions[0]()
+        self.functions['cancel']()
         self.close()
 
     def mousePressEvent(self, event):
@@ -105,12 +105,12 @@ class Option(QtWidgets.QDialog, option.Ui_Option):
         utilities.changeCSS(self.bg,'background','rgba'+rgbas)
 
     def returnLeft(self):
-        self.functions[0]()
+        self.functions['left']()
         self.close()
         return 0
 
     def returnRight(self):
-        self.functions[1]()
+        self.functions['right']()
         self.close()
         return 1
 

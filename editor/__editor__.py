@@ -616,10 +616,13 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
 
     def toSaveOrNotToSave(self, event):
         """ open option dialog with save, leave, and cancel options """
-        self.option = opt.Option(['Save','Leave'],[ event.ignore, # Cancel
-                                                    self.save,    # Left
-                                                    lambda: None, # Right
-                                                   ], self)
+        self.option = opt.Option(
+                                    {   'left'   : 'Save',
+                                        'right'  : 'Leave'  },
+
+                                      { 'cancel' : event.ignore,
+                                        'left'   : self.save,
+                                        'right'  : lambda: None, }, self)
 
     def closeEvent(self,event):
         """ upon window close """
