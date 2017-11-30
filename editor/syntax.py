@@ -51,7 +51,8 @@ class PythonHighlighter (QSyntaxHighlighter):
     ]
 
     builtins = [
-        '__init__','dict','str','bytes','tuple','list','float','int','long'
+        '__init__','dict','str','bytes','tuple','list','float','int','long',
+        'range','enumerate'
     ]
 
     # Python operators

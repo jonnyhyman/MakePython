@@ -30,14 +30,6 @@ import editor
 import sys
 import os
 
-"""     UI_REFACTOR0 BRANCH OBJECTIVE:
-
-        -> Fix undo/redo hack #6, #4
-        -> Fix line vanishing problem #5
-        -> Fix window width issue #7
-
-"""
-
 class ActionWatcher(QtCore.QObject):
     def __init__(self,parent=None):
         """ This class is solely for intercepting events """
@@ -606,10 +598,12 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
             f.close()
 
             try:
-                title = ''.join([self.file[self.file.rindex("\\")+1:],' — Make Python Editor'])
+                title = ''.join([self.file[self.file.rindex("\\")+1:],
+                                ' — Make Python Editor'])
                 self.setWindowTitle(title)
             except ValueError:
-                title = ''.join([self.file[self.file.rindex("/")+1:],' — Make Python Editor'])
+                title = ''.join([self.file[self.file.rindex("/")+1:],
+                                ' — Make Python Editor'])
                 self.setWindowTitle(title)
 
             self.saveState(1)
