@@ -22,8 +22,17 @@
         4. test remotely / fresh install
 """
 
-zip_nam = 'editor-1-0-3'
+zip_nam = 'editor-1-0-4'
 zip_url = "https://github.com/jonnyhyman/MakePython/files/1516462/editor-1-0-3.zip"
 pythonorg_root = "https://www.python.org/ftp/python/"
 delete_log_after = False
 pip_dependencies = {'PyQt5':'pyqt5'} # foldername / pypi name
+
+
+# Latest stable Python Version Number is input here
+
+# The version must support both PyQt5 and sip to work
+# and the PyQt5 / sip versions on PyPI
+
+V = '3'
+R = '6.3'

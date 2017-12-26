@@ -78,7 +78,6 @@ class install:
 
             command += ['/quiet']
             command += ['PrependPath=1']
-            command += ['Include_test=0']
             command += ['TargetDir='+self.target_dir]
 
             # if we already have python V.R, dont bother reinstalling!
@@ -117,7 +116,6 @@ class install:
         """ Get the python executable installer """
 
         installer = self.executing
-        #installer = self.executing.replace('./','')
 
         url = install_globals.pythonorg_root
         url += str(Vn)+'.'+str(Rn)+'/'  # like 3.6.3/python-3.6.3-amd64.exe"
