@@ -13,7 +13,7 @@
  * Prepends Python to PATH by default, without breaking PATH
  * Installs into obvious folders like C:\Python3x-32 or C:\Python3x-64
  * Supports Microsoft Windows 7 - 10
- 	* macOS and Linux support coming very soon
+ 	* macOS and Linux support coming soon
 
 
 
@@ -41,9 +41,10 @@
 
 ### Roadmap
 
+* Stability, faster load times, move into beta
 * macOS and Linux support
 * GitHub integration
-* File refresh if file changed externally
+* File refresh if file is changed externally
 * Text editing features
 	* Group tabbing
 	* Group untabbing
