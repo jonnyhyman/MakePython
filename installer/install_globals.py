@@ -29,7 +29,7 @@ delete_log_after = False
 pip_dependencies = {'PyQt5':'pyqt5'} # foldername / pypi name
 
 
-# Latest stable Python Version Number is input here
+# Latest stable Python Version Number is input below
 
 # The version must support both PyQt5 and sip to work
 # and the PyQt5 / sip versions on PyPI

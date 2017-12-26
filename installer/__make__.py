@@ -175,7 +175,8 @@ class Interface(QtWidgets.QMainWindow, installer.Ui_Install):
 
     def core_install(self):
         """Install the core python"""
-        self.core_installer = platform_installer.install(version.V, version.R,
+        self.core_installer = platform_installer.install(install_globals.V,
+                                                         install_globals.R,
                                                          self)
         self.phase_handlers['core'] = self.core_installer
 
