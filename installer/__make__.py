@@ -37,7 +37,6 @@ import install_globals
 import utilities
 import installer
 import platform
-import version
 import ctypes
 import sys
 import os
