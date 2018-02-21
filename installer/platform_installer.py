@@ -80,31 +80,30 @@ class install:
             command += ['PrependPath=1']
             command += ['TargetDir='+self.target_dir]
 
-            # if we already have python V.R, dont bother reinstalling!
-            # if we have the folder, and its in path, but no exe, reinstall!
-
+            # Check for python in path and in target folder
             if ((os.path.isfile(self.target_dir + '\\python') or
                  os.path.isfile(self.target_dir + '\\python.exe'))
                 and self.target_dir in os.environ['Path']):
 
-                print('found a pre-existing target python. skip python install')
+                print('found a pre-existing target python...',end='')
 
                 if self.ui.uninstall:
+                    print('uninstalling from', self.target_dir)
                     return self.target_dir
-
-                # force progress to 100%
-                self.make(None)
 
             else:
 
                 if self.ui.uninstall:  # if uninstalling,
+                    print('target python not installed')
                     return None        # signal that makepython not installed
 
+            # As long as we're not uninstalling, always run python installer
+            if not self.ui.uninstall:
                 print('getting python installer')
                 self.get_installer(Vn,Rn)
+
                 print('running platform_installer.make')
                 self.make(command)
-
 
         elif self.ui.system == 'Mac':
             pass
@@ -134,8 +133,16 @@ class install:
         self.ithread.run()
 
     def progress(self):
-        """ this function evaluates the progress based on python existence,
-            and whether the installer process is alive """
+        """ this function evaluates the progress based on python.exe existence,
+            and whether the installer process is alive.
+
+            if python.exe is in place, return 50 percent done, else 22 percent
+            if installer process exited (poll() not None), assume it's done
+
+                --> This is a bit of a weak assumption because if the process
+                    exited without actually installing things fall apart...
+
+        """
 
         if (self.ithread.prc != False and self.ithread.prc.poll() is None):
 
@@ -144,7 +151,7 @@ class install:
             else:
                 python_name = 'python'
 
-            if os.path.isfile(self.target_dir+'\\'+python_name):
+            if os.path.isfile(os.path.join(self.target_dir, python_name)):
                 print('python.executable in place...')
                 return 50
             else:

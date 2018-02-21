@@ -29,7 +29,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from time import time
+from time import time, localtime
 from math import sin,pi
 import platform_installer
 import editor_installer
@@ -169,7 +169,7 @@ class Interface(QtWidgets.QMainWindow, installer.Ui_Install):
 
 
         else:
-            
+
             self.installbutton.setText("ERROR REMOVING")
             self.message.setText("Could not find Make Python Editor...")
             self.message.setVisible(1)
@@ -187,7 +187,6 @@ class Interface(QtWidgets.QMainWindow, installer.Ui_Install):
             self.progress_timer.timeout.connect(lambda: self.check_progress())
             self.progress_timer.start(2000)
         else:
-            print("LAUNCH")
             self.editor_installer.launch_after_install()
             self.progress_timer.stop()
             self.close()
@@ -235,7 +234,18 @@ class Interface(QtWidgets.QMainWindow, installer.Ui_Install):
         total_percent /= len(self.phases.values())
 
         if total_percent >= 100:
-            self.installbutton.setText("LAUNCH")
+
+            # if it's lunch time, say LUNCH, else say LAUNCH
+            local_hour = localtime()[3]
+
+            if local_hour >= 12 and local_hour < 2:
+                say_what = "LUNCH"
+            else:
+                say_what = "LAUNCH"
+
+            self.installbutton.setText(say_what)
+            print(say_what)
+
             total_percent = 100
 
         self.progressbar.setValue(total_percent)
