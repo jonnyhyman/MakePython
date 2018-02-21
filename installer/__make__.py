@@ -12,6 +12,22 @@
     along with HDCS.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""    ---------------------- HELLO FRIEND! ----------------------
+
+        Welcome to the makepython installer!
+
+        Things go like this, basically:
+            - Force installer to run in as an ADMINISTRATOR
+            - Detect the OS we're running on (Windows? Mac? Linux?)
+
+            - Install Python ("platform_installer")
+            - Install MakePython Editor ("editor_installer")
+            - Create shortcuts, path definitions and context menu items
+
+
+"""
+
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from time import time
 from math import sin,pi
@@ -27,6 +43,8 @@ import sys
 import os
 
 def is_admin():
+    ''' Is the user running the app as admin? -- Windows only'''
+
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
     except:
@@ -34,50 +52,69 @@ def is_admin():
 
 class Interface(QtWidgets.QMainWindow, installer.Ui_Install):
 
+    """ Interface runs the pretty colors (GUI) and the installation process """
+
     def __init__(self,parent=None):
-        """ This class runs the GUI and the install process as well """
-        super(self.__class__, self).__init__()
-        self.setupUi(self)
-        # --------------------------------------------- set up front-end stuff
-        self.message.setVisible(0)
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-        self.installbutton.pressed.connect(self.buttonpress)
-        self.installbutton.released.connect(self.buttonrelease)
-        self.unix_close.clicked.connect(self.close)
-        self.win_close.clicked.connect(self.close)
 
-        self.system = platform.system()
+        super(self.__class__, self).__init__()  # super initialize from parents
 
-        self.color_timer = QtCore.QTimer()
-        self.color_start = (0,0,0)
-        self.color_stime = time()
-        self.color_timer.timeout.connect(self.new_color)
-        self.color_timer.start(50)
+        # this function defines and starts the user interface
+        self.setupUi(self)  # run the installer.Ui_Install.setupUi function
 
-        self.progressbar.setValue(0)
-        self.uninstall = False
+        self.message.setVisible(0)  # make error message invisible
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)  # hide window frame
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground) # hide background
+        self.installbutton.pressed.connect(self.buttonpress) # detect press
+        self.installbutton.released.connect(self.buttonrelease) # detect release
+        self.unix_close.clicked.connect(self.close) # connect left side X button
+        self.win_close.clicked.connect(self.close) # connect right side X button
 
-        if self.system == 'Windows':
-            self.unix_close.setVisible(0)
-            self.win_close.setVisible(1)
+        self.system = platform.system()  # detect our operating system
+
+        self.color_timer = QtCore.QTimer()  # define a timer
+        self.color_start = (0,0,0)  # define the start color
+        self.color_stime = time()  # take the start time
+        self.color_timer.timeout.connect(self.new_color)  # run @ timeout
+        self.color_timer.start(50)  # define the timeout interval (millisec)
+
+        self.progressbar.setValue(0)  # set the progressbar to zero
+        self.uninstall = False        # initialize uninstall flag to false
+
+        if self.system == 'Windows':  # hello, mr. and ms. Gates
+            self.unix_close.setVisible(0)  # hide the left hand side X
+            self.win_close.setVisible(1)   # show the right hand side X
+
+            # The below ugly duckling function makes OS icon visible
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID('make')
 
         else:
-            self.unix_close.setVisible(1)
-            self.win_close.setVisible(0)
+
+            self.unix_close.setVisible(1)  # show the left hand side X
+            self.win_close.setVisible(0)   # hide the right hand side X
 
         # --------------------------------------- Definition of install phases
 
+        # phases variable defines the percentage of installation completion
+        # if core is done, will be {'core':100, 'editor':0}
+        # if all are done, will be {'core':100, 'editor':100}
         self.phases = {
                         'core'  : 0,  # install python core
                         'editor': 0,  # install python editor
                       }
 
+        # phase_handlers holds the functions to call to check how far the
+        # installation has gone so far.
+
+        # We start them as None because we still want to decide which one to
+        # use (based on our operating system).
+
         self.phase_handlers = {
                         'core'  : None,
                         'editor': None,
                         }
+
+        # phase_starter holds the functions to call to actually -start- each
+        # phase of the installation process
 
         self.phase_starter = {
                         'core'  : self.core_install,
@@ -86,14 +123,18 @@ class Interface(QtWidgets.QMainWindow, installer.Ui_Install):
 
     def buttonpress(self):
         """ capture the button press time for buttonrelease to evaluate """
+
         self.press_time = time()
 
     def buttonrelease(self):
         """ if the install button is released, evaluate if we are
             installing or uninstalling, depending on the time button held """
+
         self.held_time = time() - self.press_time
 
         print('   >> button held for',self.held_time,'sec')
+
+        # if y'all held the install button for more than 5 secs, uninstall!
 
         if self.held_time <= 5:
             self.make()
@@ -101,7 +142,8 @@ class Interface(QtWidgets.QMainWindow, installer.Ui_Install):
             self.unmake()
 
     def sendmessage(self,msg):
-        """ send a message to the user """
+        """ send a message to the user in the QLabel called self.message """
+
         self.message.setText(msg)
         self.message.setVisible(1)
 
@@ -115,7 +157,7 @@ class Interface(QtWidgets.QMainWindow, installer.Ui_Install):
                          " To remove Python itself, follow your OS-specific"
                          " uninstallation process")
 
-        # First, check that it's even instaled in the first place!
+        # First, check that it's even installed in the first place!
 
         mp_dir = utilities.get_makepython_dir()
 
@@ -127,6 +169,7 @@ class Interface(QtWidgets.QMainWindow, installer.Ui_Install):
 
 
         else:
+            
             self.installbutton.setText("ERROR REMOVING")
             self.message.setText("Could not find Make Python Editor...")
             self.message.setVisible(1)

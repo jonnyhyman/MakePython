@@ -23,7 +23,7 @@
 """
 
 zip_nam = 'editor-1-0-4'
-zip_url = "https://github.com/jonnyhyman/MakePython/files/1516462/editor-1-0-3.zip"
+zip_url = "https://github.com/jonnyhyman/MakePython/files/1691075/editor-1-0-4.zip"
 pythonorg_root = "https://www.python.org/ftp/python/"
 delete_log_after = False
 pip_dependencies = {'PyQt5':'pyqt5'} # foldername / pypi name
@@ -35,4 +35,4 @@ pip_dependencies = {'PyQt5':'pyqt5'} # foldername / pypi name
 # and the PyQt5 / sip versions on PyPI
 
 V = '3'
-R = '6.3'
+R = '6.4'
