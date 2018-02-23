@@ -59,8 +59,7 @@ class install:
         self.ui = Ui
 
         if self.ui.system == 'Windows':
-
-            self.target_dir = ''.join(['C:\\Python',(Vn),(Rn)])
+            self.target_dir = ''.join(['C:\\Python',(Vn),(Rn)[:Rn.index('.')]])
 
             if platform.machine().lower() == 'amd64':
                 self.target_dir += '-64'
