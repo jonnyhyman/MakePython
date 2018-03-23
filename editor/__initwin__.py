@@ -13,11 +13,11 @@
 """
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from gui_designs import initwin
 from subprocess import Popen
 from math import sin, pi
 from time import time
 import platform
-import initwin
 import ctypes
 
 def extractCSS(style,att):
