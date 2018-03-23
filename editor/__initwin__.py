@@ -32,6 +32,8 @@ def changeCSS(obj,attribute,target):
 
 class InitWin(QtWidgets.QDialog, initwin.Ui_init):
 
+    ''' InitWin is an GUI for the final installation process of MakePython'''
+
     def __init__(self,install_message,process_args,parent=None):
 
         super(self.__class__, self).__init__()
