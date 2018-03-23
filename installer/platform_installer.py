@@ -84,7 +84,7 @@ class install:
                  os.path.isfile(self.target_dir + '\\python.exe'))
                 and self.target_dir in os.environ['Path']):
 
-                print('found a pre-existing target python...',end='')
+                print('found a pre-existing target python...')
 
                 if self.ui.uninstall:
                     print('uninstalling from', self.target_dir)
@@ -95,14 +95,12 @@ class install:
                 if self.ui.uninstall:  # if uninstalling,
                     print('target python not installed')
                     return None        # signal that makepython not installed
+                else:
+                    print('getting python installer')
+                    self.get_installer(Vn,Rn)
 
-            # As long as we're not uninstalling, always run python installer
-            if not self.ui.uninstall:
-                print('getting python installer')
-                self.get_installer(Vn,Rn)
-
-                print('running platform_installer.make')
-                self.make(command)
+                    print('running platform_installer.make')
+                    self.make(command)
 
         elif self.ui.system == 'Mac':
             pass
@@ -143,7 +141,8 @@ class install:
 
         """
 
-        if (self.ithread.prc != False and self.ithread.prc.poll() is None):
+        if (hasattr(self,'ithread') and
+            (self.ithread.prc != False and self.ithread.prc.poll() is None)):
 
             if self.ui.system == 'Windows':
                 python_name = 'python.exe'

@@ -22,12 +22,13 @@
         4. test remotely / fresh install
 """
 
-zip_nam = 'editor-1-0-4'
-zip_url = "https://github.com/jonnyhyman/MakePython/files/1691075/editor-1-0-4.zip"
-pythonorg_root = "https://www.python.org/ftp/python/"
-delete_log_after = False
-pip_dependencies = {'PyQt5':'pyqt5'} # foldername / pypi name
+zip_nam = 'editor-2-0-0'
+zip_url = ("https://github.com/jonnyhyman/MakePython/files/1840351/"
+            "editor-2-0-0.zip")
 
+pythonorg_root = "https://www.python.org/ftp/python/"
+pip_dependencies = {'PyQt5':'pyqt5'} # foldername / pypi name
+delete_log_after = False
 
 # Latest stable Python Version Number is input below
 
