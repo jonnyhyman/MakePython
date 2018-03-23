@@ -175,12 +175,8 @@ if __name__ == '__main__':
         else:
             files_to_open = sys.argv[1:]
 
-        if platform.system() == 'Windows':
-            py_dir = look_up('python.exe', launch_direct)
-            python_executable = py_dir + '\\python.exe'
-        else:
-            py_dir = look_up('python', launch_direct)
-            python_executable = py_dir + '\\python'
+        py_dir = look_up('python.exe', launch_direct)
+        python_executable = py_dir + '\\python.exe'
 
         mp_dir = look_up('__editor__.py', launch_direct)
 
