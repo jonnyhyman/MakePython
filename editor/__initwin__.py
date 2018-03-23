@@ -13,11 +13,11 @@
 """
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from gui_designs import initwin
 from subprocess import Popen
 from math import sin, pi
 from time import time
 import platform
-import initwin
 import ctypes
 
 def extractCSS(style,att):
@@ -31,6 +31,8 @@ def changeCSS(obj,attribute,target):
     obj.setStyleSheet(style)
 
 class InitWin(QtWidgets.QDialog, initwin.Ui_init):
+
+    ''' InitWin is an GUI for the final installation process of MakePython'''
 
     def __init__(self,install_message,process_args,parent=None):
 

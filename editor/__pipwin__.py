@@ -13,19 +13,21 @@
 """
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from subprocess import Popen, call
+from gui_designs import pipwin
 from math import sin, pi
 from time import time
-from subprocess import Popen, call
 import utilities
 import platform
 import defaults
 import styles
-import pipwin
 import ctypes # make icon show up on windows
 import sys
 import os
 
 class PipBar(QtWidgets.QDialog, pipwin.Ui_pip):
+
+    ''' The PipBar is a UI window which allows users to command pip '''
 
     def __init__(self,parent=None,color_mode=1):
 
@@ -69,6 +71,7 @@ class PipBar(QtWidgets.QDialog, pipwin.Ui_pip):
 
         if len(text) > 0:
             if text[-1] == '\n':
+
                 cursor = self.plainTextEdit.textCursor()
                 self.package_name = self.plainTextEdit.toPlainText()[:-1]
                 self.plainTextEdit.setPlainText(self.package_name)

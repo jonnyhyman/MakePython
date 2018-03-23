@@ -13,14 +13,14 @@
 """
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from subprocess import Popen, call
+from gui_designs import option
 from math import sin, pi
 from time import time
-from subprocess import Popen, call
 import utilities
 import platform
 import defaults
 import styles
-import option
 import ctypes # make icon show up on windows
 import sys
 import os

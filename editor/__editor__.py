@@ -12,21 +12,30 @@ Copyright (C) 2017, Jonathan "Jonny" Hyman
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------------
 '''
+'''
+        Welcome to the MakePython Editor!
 
+        This file is run by MakePython.py
+
+        It handles the vast majority of functionality.
+        It is basically structured like this:
+
+            ActionWatcher : Direct specific typing and interaction actions
+            Interface     : Interface functions including editing functions
+'''
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSlot
+from gui_designs import editor
 from subprocess import Popen
 from platform import system
 import utilities as utils
 import __option__ as opt
 import __pipwin__ as pip
-import importlib.util
+from time import time
 import defaults
-import inspect
 import ctypes # make icon show up on windows
 import styles
 import syntax
-import editor
 import sys
 import os
 
@@ -103,18 +112,22 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         super(self.__class__, self).__init__()
         self.setupUi(self)
 
-        self.root = os.path.realpath(__file__)  # where to find defaults.py and assets
+        # find self.root = where to find defaults.py and assets
+        self.root = os.path.realpath(__file__)
         self.root = os.path.dirname(self.root)
         self.root+= '\\'
 
+        # initialize all fonts
         for font in os.listdir( self.root + 'fonts' ):
             QtGui.QFontDatabase.addApplicationFont(self.root + 'fonts\\' + font)
             print('font initted:',font)
 
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(self.root+"icon.png"),
-                       QtGui.QIcon.Normal,
-                       QtGui.QIcon.Off)
+        icon.addPixmap(
+                            QtGui.QPixmap(self.root+"icon.png"),
+                            QtGui.QIcon.Normal,
+                            QtGui.QIcon.Off
+                       )
 
         self.setWindowIcon(icon)
 
@@ -155,6 +168,7 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
 
     def actionSetup(self):
         """ tie in keyboard actions and button presses """
+
         self.actionFilter = ActionWatcher(self)
         self.textEdit.installEventFilter(self.actionFilter)
 
@@ -179,10 +193,12 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         self.shortcut = QtWidgets.QShortcut(QtCore.Qt.Key_F5,self)
         self.shortcut.activated.connect(self.launch)
 
-        self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Return"),self)
+        self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Return"),
+                                                                        self)
         self.shortcut.activated.connect(self.launch)
 
-        self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Shift+Return"),self)
+        self.shortcut = QtWidgets.QShortcut(
+                                QtGui.QKeySequence("Ctrl+Shift+Return"), self)
         self.shortcut.activated.connect(self.newShell)
 
         self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+f"),self)
@@ -194,33 +210,30 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+b"),self)
         self.shortcut.activated.connect(self.flipTheme)
 
-        self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+m"),self)
-        self.shortcut.activated.connect(self.findSource)
-
         self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+p"),self)
         self.shortcut.activated.connect(self.openPIP)
 
         self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Up"),self)
         self.shortcut.activated.connect(lambda: self.blockMove(+1))
 
-        self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Down"),self)
+        self.shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Down"),
+                                                                        self)
         self.shortcut.activated.connect(lambda: self.blockMove(-1))
 
     def buttonSetup(self):
         """ connect buttons """
 
         self.buttons = [
-                        self.newbutton,
-                        self.pipbutton,
-                        self.openbutton,
-                        self.savebutton,
-                        self.shellbutton,
-                        self.findbutton,
-                        self.sourcebutton,
-                        self.colorbutton,
-                        self.findandreplace_closebutton,
-                        self.findandreplace_findbutton,
-                        self.findandreplace_replacebutton,
+                            self.newbutton,
+                            self.pipbutton,
+                            self.openbutton,
+                            self.savebutton,
+                            self.shellbutton,
+                            self.findbutton,
+                            self.colorbutton,
+                            self.findandreplace_closebutton,
+                            self.findandreplace_findbutton,
+                            self.findandreplace_replacebutton,
                         ]
 
         self.newbutton.clicked.connect(self.new)
@@ -229,12 +242,15 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         self.savebutton.clicked.connect(self.save)
         self.pipbutton.clicked.connect(self.openPIP)
         self.shellbutton.clicked.connect(self.newShell)
-        self.sourcebutton.clicked.connect(self.findSource)
         self.findandreplace_closebutton.clicked.connect(self.closeFind)
-        self.findandreplace_replacebutton.clicked.connect(lambda: self.replaceTextChange(force=True))
-        self.findandreplace_findbutton.clicked.connect(lambda: self.findTextChange(force=True))
         self.colorbutton.clicked.connect(self.flipTheme)
         self.findbutton.clicked.connect(self.find)
+
+        self.findandreplace_findbutton.clicked.connect(
+                                lambda: self.findTextChange(force=True))
+
+        self.findandreplace_replacebutton.clicked.connect(
+                                lambda: self.replaceTextChange(force=True))
 
     def captureHistory(self):
         """ capture current text state, and cursor state """
@@ -351,7 +367,9 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         self.textEdit.setPlainText(''.join([blk+'\n' for blk in blocks]))
 
         if direction == -1:
-            cursor.setPosition(block_pos + inblock_pos + len(swap_with_text+'\n'))
+            cursor.setPosition(
+                        block_pos + inblock_pos + len(swap_with_text+'\n')
+                    )
 
         elif direction == +1:
             cursor.setPosition(swap_with_pos + inblock_pos)
@@ -500,9 +518,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         # set default to current
         self.changeDefault('font_size', self.fontsize)
 
-        #print('set font size to:', self.fontsize)
-        #print('act font size is:', self.textEdit.fontPointSize())
-
     def launch(self):
         """ launch the program """
         if self.file == '' or self.windowTitle()[-1]=='*':
@@ -649,89 +664,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
 
         else:
             Popen(command, shell=True)
-
-    def findSource(self):
-        """ find the source of the highlighted function """
-
-        cursor = self.textEdit.textCursor()
-        selected = cursor.selection()
-
-        if selected.isEmpty():
-            cursor.select(QtGui.QTextCursor.WordUnderCursor)
-            selected = cursor.selectedText()
-            self.textEdit.setTextCursor(cursor)
-        else:
-            selected = selected.toPlainText()
-
-        try:
-            spec = importlib.util.spec_from_file_location(
-                                            self.file[self.file.rindex('/')+1:-3],
-                                            self.file)
-        except ValueError:
-            try:
-                spec = importlib.util.spec_from_file_location(
-                                                self.file[self.file.rindex('\\')+1:-3],
-                                                self.file)
-            except Exception as e:
-                self.newMessage("Make Python couldn't find this file. Have you saved yet?")
-                return
-
-        module = importlib.util.module_from_spec(spec)
-
-        # don't allow execution of file unless there is a __name__ == main argument
-        # without doing this, the program would be run within the Make Python thread!
-        # (this is because python imports files by executing them)
-
-        # we check here to make sure there is some certainty of
-        # import execution protection... execute import & open source if:
-
-        #  -> if there's an if __name__=='__main__' argument
-        #  -> if we're inside some module's __init__ file
-        #     -> we assume module devs made good decisions w.r.t. import exec
-
-        with open(self.file,'r',encoding='utf-8') as f:
-            content = f.read()
-
-        content = content.replace(' ','').replace('"','').replace("'",'')
-
-        if ("""if__name__==__main__""" in content
-                              or
-                    spec.name == '__init__'):
-
-            try:
-                spec.loader.exec_module(module)
-            except Exception as e:
-                self.newMessage("Couldn't find source because"+str(e))
-        else:
-            self.newMessage('''Sorry, can't do search without any'''+
-                            ''' import execution protection like >''' +
-                            ''' if __name__=="__main__"''')
-            return
-
-        try:
-            self.o_file = inspect.getfile(getattr(module,selected))
-
-            if self.o_file != self.file:
-                if self.o_file[-2:] == 'py':  # can't open precompiled stuff
-                    self.openNew()
-                else:
-                    self.newMessage("Make Python can't edit the "+
-                                    self.o_file[self.o_file.index('.'):]+
-                                    " file at " + self.o_file)
-            else:
-                self.find()
-
-                if inspect.isfunction(getattr(module,selected)):
-                    self.findText.setPlainText('def '+selected)
-
-                elif inspect.isclas(getattr(module,selected)):
-                    self.findText.setPlainText('class '+selected)
-
-                self.findTextChange()
-
-        except Exception as e:
-            self.newMessage("Make Python can't edit source because "+str(e))
-
 
     def openPIP(self):
         """ open the window which allows pip installs """
@@ -895,6 +827,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
 if __name__=='__main__':
 
     app = QtWidgets.QApplication(sys.argv)
-    gui = Interface(sys.argv)
+    gui = Interface()
     gui.show()
     app.exec_()

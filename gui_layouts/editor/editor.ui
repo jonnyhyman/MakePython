@@ -355,51 +355,50 @@ QPushButton::pressed{
 	border-radius: 5px;
     padding: 5%;
 }
-QScrollBar::vertical {
-        border: 0px solid white;
-        background:#ebebeb;
-        margin: 0px 0px 0px 0px;
-		width: 10px;
-}
-QScrollBar::handle:vertical {
-    background: #d2d2d2;
-	border: 0px solid black;
-	border-radius: 5px;
-    min-height: 0px;
-}
-QScrollBar::horizontal {
-        border: 0px solid white;
-        background:#ebebeb;
-        margin: 0px 0px 0px 0px;
-		height: 10px;
-}
-QScrollBar::handle:horizontal {
-    background: #d2d2d2;
-	border: 0px solid black;
-	border-radius: 5px;
-    min-width: 0px;
-}
-QScrollBar::add-line:horizontal {
-    border: 2px solid grey;
-    background: #32CC99;
-    width: 20px;
-    subcontrol-position: right;
-    subcontrol-origin: margin;
-}
+					QScrollBar::vertical {
+                            border: 0px solid white;
 
-QScrollBar::sub-line:horizontal {
-    border: 2px solid grey;
-    background: #32CC99;
-    width: 20px;
-    subcontrol-position: left;
-    subcontrol-origin: margin;
-}</string>
+                            background: transparent;
+                            margin: 0px 0px 0px 0px;
+                    		width: 4px;
+                    }
+                    QScrollBar::handle:vertical {
+                        background: grey;
+                    	border: 0px solid black;
+
+                    	border-radius: 5px;
+                        min-height: 0px;
+                        margin: 0px 0px 0px 0px;
+                    }
+                    QScrollBar::horizontal {
+                        border: 0px solid white;
+
+                        background: transparent;
+                        margin: 0px 0px 0px 0px;
+                		height: 4px;
+                    }
+                    QScrollBar::handle:horizontal {
+                        background: grey;
+                    	border: 0px solid black;
+
+                    	border-radius: 5px;
+                        min-width: 0px;
+                        margin: 0px 0px 0px 0px;
+                    }
+                    QScrollBar::add-line:vertical{width: 0px; height: 0px;}
+                    QScrollBar::sub-line:vertical{width: 0px; height: 0px;}
+                    QScrollBar::add-page:vertical{background-color: transparent;}
+                    QScrollBar::sub-page:vertical{background-color: transparent;}
+                    QScrollBar::add-line:horizontal{width: 0px; height: 0px;}
+                    QScrollBar::sub-line:horizontal{width: 0px; height: 0px;}
+                    QScrollBar::add-page:horizontal{background-color: transparent;}
+                    QScrollBar::sub-page:horizontal{background-color: transparent;}</string>
       </property>
       <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
+       <enum>Qt::ScrollBarAsNeeded</enum>
       </property>
       <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
+       <enum>Qt::ScrollBarAsNeeded</enum>
       </property>
       <property name="sizeAdjustPolicy">
        <enum>QAbstractScrollArea::AdjustIgnored</enum>
@@ -565,8 +564,8 @@ QPushButton::pressed{
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="5" column="0">
-           <widget class="QPushButton" name="sourcebutton">
+          <item row="6" column="0">
+           <widget class="QPushButton" name="colorbutton">
             <property name="minimumSize">
              <size>
               <width>40</width>
@@ -582,12 +581,12 @@ QPushButton::pressed{
             <property name="font">
              <font>
               <family>Roboto</family>
-              <pointsize>11</pointsize>
+              <pointsize>20</pointsize>
               <italic>false</italic>
              </font>
             </property>
             <property name="toolTip">
-             <string extracomment="Module Source">Open Module Source | Ctrl + M</string>
+             <string extracomment="Light / Dark">Light / Dark | Ctrl + B</string>
             </property>
             <property name="toolTipDuration">
              <number>-1</number>
@@ -611,7 +610,7 @@ QPushButton::pressed{
 }</string>
             </property>
             <property name="text">
-             <string>👁</string>
+             <string>☯</string>
             </property>
            </widget>
           </item>
@@ -665,55 +664,6 @@ QPushButton::pressed{
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="openbutton">
-            <property name="minimumSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>Roboto</family>
-              <pointsize>11</pointsize>
-             </font>
-            </property>
-            <property name="toolTip">
-             <string extracomment="Open">Open | Ctrl + O</string>
-            </property>
-            <property name="toolTipDuration">
-             <number>-1</number>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton{
-	color: white;
-	background-color: #0023a4;
-	border: 0px solid white;
-	border-radius:20px;
-	padding: 5px;
-}
-
-QPushButton::hover{
-	background-color: #0C75E8;
-}
-
-QPushButton::pressed{
-	border: 2px solid #94ff94;
-	background-color: #0d242e;
-}</string>
-            </property>
-            <property name="text">
-             <string>📤</string>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="0">
            <widget class="QPushButton" name="savebutton">
             <property name="minimumSize">
@@ -760,6 +710,55 @@ QPushButton::pressed{
             </property>
             <property name="text">
              <string>📥</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="openbutton">
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Roboto</family>
+              <pointsize>11</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string extracomment="Open">Open | Ctrl + O</string>
+            </property>
+            <property name="toolTipDuration">
+             <number>-1</number>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton{
+	color: white;
+	background-color: #0023a4;
+	border: 0px solid white;
+	border-radius:20px;
+	padding: 5px;
+}
+
+QPushButton::hover{
+	background-color: #0C75E8;
+}
+
+QPushButton::pressed{
+	border: 2px solid #94ff94;
+	background-color: #0d242e;
+}</string>
+            </property>
+            <property name="text">
+             <string>📤</string>
             </property>
            </widget>
           </item>
@@ -868,57 +867,7 @@ QPushButton::pressed{
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
-           <widget class="QPushButton" name="colorbutton">
-            <property name="minimumSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>Roboto</family>
-              <pointsize>20</pointsize>
-              <italic>false</italic>
-             </font>
-            </property>
-            <property name="toolTip">
-             <string extracomment="Light / Dark">Light / Dark | Ctrl + B</string>
-            </property>
-            <property name="toolTipDuration">
-             <number>-1</number>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton{
-	color: white;
-	background-color: #0023a4;
-	border: 0px solid white;
-	border-radius:20px;
-	padding: 5px;
-}
-
-QPushButton::hover{
-	background-color: #0C75E8;
-}
-
-QPushButton::pressed{
-	border: 2px solid #94ff94;
-	background-color: #0d242e;
-}</string>
-            </property>
-            <property name="text">
-             <string>☯</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
+          <item row="5" column="0">
            <widget class="QPushButton" name="pipbutton">
             <property name="minimumSize">
              <size>

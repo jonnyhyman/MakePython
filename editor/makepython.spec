@@ -22,9 +22,11 @@ add_to_datas = [
 
 ]
 
-a = Analysis(['makepython.py'],
-             pathex=['C:\\Users\\__jonny__\\Dropbox\\Compute\\makepython\\code\\editor',
-                     'C:\\Python36-64\\Lib\\site-packages\\PyQt5\\Qt\\bin'],
+a = Analysis(['makepython_windows.py'],
+             pathex=[
+             'C:\\Users\\__jonny__\\Dropbox\\Compute\\makepython\\code\\editor',
+             'C:\\Python36-64\\Lib\\site-packages\\PyQt5\\Qt\\bin'
+             ],
              binaries=[],
              datas=add_to_datas,
              hiddenimports=[],
@@ -35,8 +37,7 @@ a = Analysis(['makepython.py'],
              win_private_assemblies=False,
              cipher=block_cipher)
 
-pyz = PYZ(a.pure, a.zipped_data,
-             cipher=block_cipher)
+pyz = PYZ(a.pure, a.zipped_data, cipher = block_cipher)
 
 exe = EXE(pyz,
           a.scripts,

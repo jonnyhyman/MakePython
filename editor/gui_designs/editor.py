@@ -188,47 +188,46 @@ class Ui_Editor(object):
 "    border-radius: 5px;\n"
 "    padding: 5%;\n"
 "}\n"
-"QScrollBar::vertical {\n"
-"        border: 0px solid white;\n"
-"        background:#ebebeb;\n"
-"        margin: 0px 0px 0px 0px;\n"
-"        width: 10px;\n"
-"}\n"
-"QScrollBar::handle:vertical {\n"
-"    background: #d2d2d2;\n"
-"    border: 0px solid black;\n"
-"    border-radius: 5px;\n"
-"    min-height: 0px;\n"
-"}\n"
-"QScrollBar::horizontal {\n"
-"        border: 0px solid white;\n"
-"        background:#ebebeb;\n"
-"        margin: 0px 0px 0px 0px;\n"
-"        height: 10px;\n"
-"}\n"
-"QScrollBar::handle:horizontal {\n"
-"    background: #d2d2d2;\n"
-"    border: 0px solid black;\n"
-"    border-radius: 5px;\n"
-"    min-width: 0px;\n"
-"}\n"
-"QScrollBar::add-line:horizontal {\n"
-"    border: 2px solid grey;\n"
-"    background: #32CC99;\n"
-"    width: 20px;\n"
-"    subcontrol-position: right;\n"
-"    subcontrol-origin: margin;\n"
-"}\n"
+"                    QScrollBar::vertical {\n"
+"                            border: 0px solid white;\n"
 "\n"
-"QScrollBar::sub-line:horizontal {\n"
-"    border: 2px solid grey;\n"
-"    background: #32CC99;\n"
-"    width: 20px;\n"
-"    subcontrol-position: left;\n"
-"    subcontrol-origin: margin;\n"
-"}")
-        self.textEdit.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.textEdit.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+"                            background: transparent;\n"
+"                            margin: 0px 0px 0px 0px;\n"
+"                            width: 4px;\n"
+"                    }\n"
+"                    QScrollBar::handle:vertical {\n"
+"                        background: grey;\n"
+"                        border: 0px solid black;\n"
+"\n"
+"                        border-radius: 5px;\n"
+"                        min-height: 0px;\n"
+"                        margin: 0px 0px 0px 0px;\n"
+"                    }\n"
+"                    QScrollBar::horizontal {\n"
+"                        border: 0px solid white;\n"
+"\n"
+"                        background: transparent;\n"
+"                        margin: 0px 0px 0px 0px;\n"
+"                        height: 4px;\n"
+"                    }\n"
+"                    QScrollBar::handle:horizontal {\n"
+"                        background: grey;\n"
+"                        border: 0px solid black;\n"
+"\n"
+"                        border-radius: 5px;\n"
+"                        min-width: 0px;\n"
+"                        margin: 0px 0px 0px 0px;\n"
+"                    }\n"
+"                    QScrollBar::add-line:vertical{width: 0px; height: 0px;}\n"
+"                    QScrollBar::sub-line:vertical{width: 0px; height: 0px;}\n"
+"                    QScrollBar::add-page:vertical{background-color: transparent;}\n"
+"                    QScrollBar::sub-page:vertical{background-color: transparent;}\n"
+"                    QScrollBar::add-line:horizontal{width: 0px; height: 0px;}\n"
+"                    QScrollBar::sub-line:horizontal{width: 0px; height: 0px;}\n"
+"                    QScrollBar::add-page:horizontal{background-color: transparent;}\n"
+"                    QScrollBar::sub-page:horizontal{background-color: transparent;}")
+        self.textEdit.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.textEdit.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
         self.textEdit.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
         self.textEdit.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
         self.textEdit.setAcceptRichText(False)
@@ -307,16 +306,16 @@ class Ui_Editor(object):
         self.verticalLayout.addWidget(self.pybutton)
         self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
-        self.sourcebutton = QtWidgets.QPushButton(self.verticalLayoutWidget)
-        self.sourcebutton.setMinimumSize(QtCore.QSize(40, 40))
-        self.sourcebutton.setMaximumSize(QtCore.QSize(40, 40))
+        self.colorbutton = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.colorbutton.setMinimumSize(QtCore.QSize(40, 40))
+        self.colorbutton.setMaximumSize(QtCore.QSize(40, 40))
         font = QtGui.QFont()
         font.setFamily("Roboto")
-        font.setPointSize(11)
+        font.setPointSize(20)
         font.setItalic(False)
-        self.sourcebutton.setFont(font)
-        self.sourcebutton.setToolTipDuration(-1)
-        self.sourcebutton.setStyleSheet("QPushButton{\n"
+        self.colorbutton.setFont(font)
+        self.colorbutton.setToolTipDuration(-1)
+        self.colorbutton.setStyleSheet("QPushButton{\n"
 "    color: white;\n"
 "    background-color: #0023a4;\n"
 "    border: 0px solid white;\n"
@@ -332,8 +331,8 @@ class Ui_Editor(object):
 "    border: 2px solid #94ff94;\n"
 "    background-color: #0d242e;\n"
 "}")
-        self.sourcebutton.setObjectName("sourcebutton")
-        self.gridLayout.addWidget(self.sourcebutton, 5, 0, 1, 1)
+        self.colorbutton.setObjectName("colorbutton")
+        self.gridLayout.addWidget(self.colorbutton, 6, 0, 1, 1)
         self.findbutton = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.findbutton.setMinimumSize(QtCore.QSize(40, 40))
         self.findbutton.setMaximumSize(QtCore.QSize(40, 40))
@@ -361,32 +360,6 @@ class Ui_Editor(object):
 "}")
         self.findbutton.setObjectName("findbutton")
         self.gridLayout.addWidget(self.findbutton, 4, 0, 1, 1)
-        self.openbutton = QtWidgets.QPushButton(self.verticalLayoutWidget)
-        self.openbutton.setMinimumSize(QtCore.QSize(40, 40))
-        self.openbutton.setMaximumSize(QtCore.QSize(40, 40))
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(11)
-        self.openbutton.setFont(font)
-        self.openbutton.setToolTipDuration(-1)
-        self.openbutton.setStyleSheet("QPushButton{\n"
-"    color: white;\n"
-"    background-color: #0023a4;\n"
-"    border: 0px solid white;\n"
-"    border-radius:20px;\n"
-"    padding: 5px;\n"
-"}\n"
-"\n"
-"QPushButton::hover{\n"
-"    background-color: #0C75E8;\n"
-"}\n"
-"\n"
-"QPushButton::pressed{\n"
-"    border: 2px solid #94ff94;\n"
-"    background-color: #0d242e;\n"
-"}")
-        self.openbutton.setObjectName("openbutton")
-        self.gridLayout.addWidget(self.openbutton, 1, 0, 1, 1)
         self.savebutton = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.savebutton.setMinimumSize(QtCore.QSize(40, 40))
         self.savebutton.setMaximumSize(QtCore.QSize(40, 40))
@@ -413,6 +386,32 @@ class Ui_Editor(object):
 "}")
         self.savebutton.setObjectName("savebutton")
         self.gridLayout.addWidget(self.savebutton, 2, 0, 1, 1)
+        self.openbutton = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.openbutton.setMinimumSize(QtCore.QSize(40, 40))
+        self.openbutton.setMaximumSize(QtCore.QSize(40, 40))
+        font = QtGui.QFont()
+        font.setFamily("Roboto")
+        font.setPointSize(11)
+        self.openbutton.setFont(font)
+        self.openbutton.setToolTipDuration(-1)
+        self.openbutton.setStyleSheet("QPushButton{\n"
+"    color: white;\n"
+"    background-color: #0023a4;\n"
+"    border: 0px solid white;\n"
+"    border-radius:20px;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton::hover{\n"
+"    background-color: #0C75E8;\n"
+"}\n"
+"\n"
+"QPushButton::pressed{\n"
+"    border: 2px solid #94ff94;\n"
+"    background-color: #0d242e;\n"
+"}")
+        self.openbutton.setObjectName("openbutton")
+        self.gridLayout.addWidget(self.openbutton, 1, 0, 1, 1)
         self.newbutton = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.newbutton.setMinimumSize(QtCore.QSize(40, 40))
         self.newbutton.setMaximumSize(QtCore.QSize(40, 40))
@@ -468,33 +467,6 @@ class Ui_Editor(object):
 "}")
         self.shellbutton.setObjectName("shellbutton")
         self.gridLayout.addWidget(self.shellbutton, 3, 0, 1, 1)
-        self.colorbutton = QtWidgets.QPushButton(self.verticalLayoutWidget)
-        self.colorbutton.setMinimumSize(QtCore.QSize(40, 40))
-        self.colorbutton.setMaximumSize(QtCore.QSize(40, 40))
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(20)
-        font.setItalic(False)
-        self.colorbutton.setFont(font)
-        self.colorbutton.setToolTipDuration(-1)
-        self.colorbutton.setStyleSheet("QPushButton{\n"
-"    color: white;\n"
-"    background-color: #0023a4;\n"
-"    border: 0px solid white;\n"
-"    border-radius:20px;\n"
-"    padding: 5px;\n"
-"}\n"
-"\n"
-"QPushButton::hover{\n"
-"    background-color: #0C75E8;\n"
-"}\n"
-"\n"
-"QPushButton::pressed{\n"
-"    border: 2px solid #94ff94;\n"
-"    background-color: #0d242e;\n"
-"}")
-        self.colorbutton.setObjectName("colorbutton")
-        self.gridLayout.addWidget(self.colorbutton, 7, 0, 1, 1)
         self.pipbutton = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.pipbutton.setMinimumSize(QtCore.QSize(40, 40))
         self.pipbutton.setMaximumSize(QtCore.QSize(40, 40))
@@ -521,7 +493,7 @@ class Ui_Editor(object):
 "    background-color: #0d242e;\n"
 "}")
         self.pipbutton.setObjectName("pipbutton")
-        self.gridLayout.addWidget(self.pipbutton, 6, 0, 1, 1)
+        self.gridLayout.addWidget(self.pipbutton, 5, 0, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout)
         self.gridLayout_2.addWidget(self.widget, 0, 0, 5, 1)
         Editor.setCentralWidget(self.centralWidget)
@@ -552,20 +524,18 @@ class Ui_Editor(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This is an error message</p></body></html>"))
         self.pybutton.setToolTip(_translate("Editor", "Launch | Ctrl + Enter"))
         self.pybutton.setText(_translate("Editor", "py"))
-        self.sourcebutton.setToolTip(_translate("Editor", "Open Module Source | Ctrl + M"))
-        self.sourcebutton.setText(_translate("Editor", "👁"))
+        self.colorbutton.setToolTip(_translate("Editor", "Light / Dark | Ctrl + B"))
+        self.colorbutton.setText(_translate("Editor", "☯"))
         self.findbutton.setToolTip(_translate("Editor", "Find | Ctrl + F"))
         self.findbutton.setText(_translate("Editor", "🔎"))
-        self.openbutton.setToolTip(_translate("Editor", "Open | Ctrl + O"))
-        self.openbutton.setText(_translate("Editor", "📤"))
         self.savebutton.setToolTip(_translate("Editor", "Save | Ctrl + S"))
         self.savebutton.setText(_translate("Editor", "📥"))
+        self.openbutton.setToolTip(_translate("Editor", "Open | Ctrl + O"))
+        self.openbutton.setText(_translate("Editor", "📤"))
         self.newbutton.setToolTip(_translate("Editor", "New | Ctrl + N"))
         self.newbutton.setText(_translate("Editor", "+"))
         self.shellbutton.setToolTip(_translate("Editor", "Python Shell | Ctrl + Shift + Enter"))
         self.shellbutton.setText(_translate("Editor", ">>"))
-        self.colorbutton.setToolTip(_translate("Editor", "Light / Dark | Ctrl + B"))
-        self.colorbutton.setText(_translate("Editor", "☯"))
         self.pipbutton.setToolTip(_translate("Editor", "Package Installer | Ctrl+P"))
         self.pipbutton.setText(_translate("Editor", "📦"))
 
