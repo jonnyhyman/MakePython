@@ -20,7 +20,7 @@ from platform import system
 import utilities as utils
 import __option__ as opt
 import __pipwin__ as pip
-import importlib.util
+from time import time
 import defaults
 import inspect
 import ctypes # make icon show up on windows
@@ -216,7 +216,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
                         self.savebutton,
                         self.shellbutton,
                         self.findbutton,
-                        self.sourcebutton,
                         self.colorbutton,
                         self.findandreplace_closebutton,
                         self.findandreplace_findbutton,
@@ -229,7 +228,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         self.savebutton.clicked.connect(self.save)
         self.pipbutton.clicked.connect(self.openPIP)
         self.shellbutton.clicked.connect(self.newShell)
-        self.sourcebutton.clicked.connect(self.findSource)
         self.findandreplace_closebutton.clicked.connect(self.closeFind)
         self.findandreplace_replacebutton.clicked.connect(lambda: self.replaceTextChange(force=True))
         self.findandreplace_findbutton.clicked.connect(lambda: self.findTextChange(force=True))
@@ -650,89 +648,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
         else:
             Popen(command, shell=True)
 
-    def findSource(self):
-        """ find the source of the highlighted function """
-
-        cursor = self.textEdit.textCursor()
-        selected = cursor.selection()
-
-        if selected.isEmpty():
-            cursor.select(QtGui.QTextCursor.WordUnderCursor)
-            selected = cursor.selectedText()
-            self.textEdit.setTextCursor(cursor)
-        else:
-            selected = selected.toPlainText()
-
-        try:
-            spec = importlib.util.spec_from_file_location(
-                                            self.file[self.file.rindex('/')+1:-3],
-                                            self.file)
-        except ValueError:
-            try:
-                spec = importlib.util.spec_from_file_location(
-                                                self.file[self.file.rindex('\\')+1:-3],
-                                                self.file)
-            except Exception as e:
-                self.newMessage("Make Python couldn't find this file. Have you saved yet?")
-                return
-
-        module = importlib.util.module_from_spec(spec)
-
-        # don't allow execution of file unless there is a __name__ == main argument
-        # without doing this, the program would be run within the Make Python thread!
-        # (this is because python imports files by executing them)
-
-        # we check here to make sure there is some certainty of
-        # import execution protection... execute import & open source if:
-
-        #  -> if there's an if __name__=='__main__' argument
-        #  -> if we're inside some module's __init__ file
-        #     -> we assume module devs made good decisions w.r.t. import exec
-
-        with open(self.file,'r',encoding='utf-8') as f:
-            content = f.read()
-
-        content = content.replace(' ','').replace('"','').replace("'",'')
-
-        if ("""if__name__==__main__""" in content
-                              or
-                    spec.name == '__init__'):
-
-            try:
-                spec.loader.exec_module(module)
-            except Exception as e:
-                self.newMessage("Couldn't find source because"+str(e))
-        else:
-            self.newMessage('''Sorry, can't do search without any'''+
-                            ''' import execution protection like >''' +
-                            ''' if __name__=="__main__"''')
-            return
-
-        try:
-            self.o_file = inspect.getfile(getattr(module,selected))
-
-            if self.o_file != self.file:
-                if self.o_file[-2:] == 'py':  # can't open precompiled stuff
-                    self.openNew()
-                else:
-                    self.newMessage("Make Python can't edit the "+
-                                    self.o_file[self.o_file.index('.'):]+
-                                    " file at " + self.o_file)
-            else:
-                self.find()
-
-                if inspect.isfunction(getattr(module,selected)):
-                    self.findText.setPlainText('def '+selected)
-
-                elif inspect.isclas(getattr(module,selected)):
-                    self.findText.setPlainText('class '+selected)
-
-                self.findTextChange()
-
-        except Exception as e:
-            self.newMessage("Make Python can't edit source because "+str(e))
-
-
     def openPIP(self):
         """ open the window which allows pip installs """
         self.pip = pip.PipBar()
@@ -895,6 +810,6 @@ class Interface(QtWidgets.QMainWindow, editor.Ui_Editor):
 if __name__=='__main__':
 
     app = QtWidgets.QApplication(sys.argv)
-    gui = Interface(sys.argv)
+    gui = Interface()
     gui.show()
     app.exec_()

@@ -36,9 +36,9 @@ from utilities import get_usr_reg
 import __initwin__ as initwin
 from subprocess import Popen
 from PyQt5 import QtWidgets
+import time
 import sys
 import os
-import time
 
 def get_makepython_dir():
     """ We use this to find where the current file, makepython.exe
@@ -46,6 +46,7 @@ def get_makepython_dir():
 
     print('looking for makepython.executable in path directories...')
 
+    # Get the path's from the environment variable (User Path)
     path = get_usr_reg('PATH',r'Environment')
 
     for folder in path.split(';'):
@@ -55,11 +56,10 @@ def get_makepython_dir():
         print('trying :', folder + executable)
 
         if os.path.isfile(folder + executable):
-            print('found makepython.executable!')
+            print('found makepython.exe!')
             return folder
 
     # If we couldn't find in PATH, check each python installation
-
     print('Couldnt find makepython.executable in PATH dirs...')
     print('Checking in all python distributions... Looking for python.exes:')
 
@@ -70,6 +70,7 @@ def get_makepython_dir():
         print('trying :', folder + executable)
 
         if os.path.isfile(folder + executable):
+
             print('found python!')
 
             mk_pkg = '\\Lib\\site-packages\\makepython'
@@ -86,9 +87,9 @@ def get_makepython_dir():
                 else:
                     print('''couldn't find makepython.exe :(''')
             else:
-                print('could not find makepython folder...',folder+mk_pkg)
+                print('could not find makepython folder...', folder + mk_pkg)
 
-def look_up(file_to_find, current_working_directory=None):
+def look_up(file_to_find, current_working_directory = None):
     """ The purpose of this function is to determine what is the python
         path root in which this file exists. It is used throughout to
         ensure we use the current python distribution for running the editor,
@@ -99,7 +100,6 @@ def look_up(file_to_find, current_working_directory=None):
         current_working_directory = get_makepython_dir()
 
     ## only use if testing from some remote directory
-    #current_working_directory = 'C:\\Python36-64\\Lib\\site-packages\\makepython\\'
     #current_working_directory = 'C:\Python37-64\Lib\site-packages\makepython'
     search_directory = current_working_directory  # start here
 
@@ -108,12 +108,13 @@ def look_up(file_to_find, current_working_directory=None):
     try:
         while not os.path.isfile(search_directory + '\\' + file_to_find):
             search_directory = search_directory[:search_directory.rindex('\\')]
+            print('...', search_directory + '\\' + file_to_find)
 
     except ValueError:
         print(file_to_find+" couldn't be found anywhere above makepython.exe!")
         return None
 
-    print('found '+file_to_find+' in', search_directory)
+    print('found ' + file_to_find + ' in', search_directory)
 
     return search_directory
 
@@ -150,27 +151,30 @@ def ensure_dependencies(py_dir):
 if __name__ == '__main__':
 
     try:
+
+        start_time = time.time()
+
         files_to_open = []
         launch_direct = None
-
-        # if launching for the first time, path is not refreshed.
-        # so the installer will provide us with the launch folder!
-
+        '''
+            if launching for the first time, path is not refreshed.
+            so the installer will provide us with the launch folder in sys.argv!
+        '''
         if len(sys.argv) == 2 and 'launch' in sys.argv[1]:
             launch_direct = sys.argv[1].split('=')[1]  # launch=/directory/
+
         else:
             files_to_open = sys.argv[1:]
 
-        py_dir = look_up('python.exe', launch_direct)
-        python_executable = py_dir + '\\python.exe'
-
+        py_dir = look_up('python.exe',    launch_direct)
         mp_dir = look_up('__editor__.py', launch_direct)
 
+        python_executable = py_dir + '\\python.exe'
         makepython_editor = mp_dir + '\\__editor__.py'
 
         # Ensure pyqt bin is visible for this session
         temp_path_append = (py_dir + '\\Lib\\site-packages\\PyQt5\\Qt\\bin')
-        os.environ['PATH'] = os.environ['PATH'] +';'+ temp_path_append
+        os.environ['PATH'] = os.environ['PATH'] + ';' + temp_path_append
 
         if len(files_to_open) > 0:
 
@@ -178,7 +182,11 @@ if __name__ == '__main__':
 
                 for filepath in files_to_open:
 
-                    launch_args = [python_executable, makepython_editor, filepath]
+                    launch_args = [
+                                        python_executable,
+                                        makepython_editor,
+                                        filepath
+                                    ]
 
                     print('launching:',launch_args)
                     print('current python path:')
@@ -197,13 +205,14 @@ if __name__ == '__main__':
 
                 print('launching:',launch_args)
                 print('current python path:')
-                [print('   '+var) for var in sys.path]
+                [print('   ' + var) for var in sys.path]
                 print('current os path:')
-                [print('   '+var) for var in os.environ['Path'].split(';')]
+                [print('   ' + var) for var in os.environ['Path'].split(';')]
 
                 # forward stdout to our current shell
                 Popen(launch_args, shell=True, env=os.environ)
 
+        print(time.time()-start_time,'seconds to launch')
         sys.exit()
 
     except Exception as e:
