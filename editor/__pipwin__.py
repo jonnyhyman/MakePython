@@ -27,6 +27,8 @@ import os
 
 class PipBar(QtWidgets.QDialog, pipwin.Ui_pip):
 
+    ''' The PipBar is a UI window which allows users to command pip '''
+
     def __init__(self,parent=None,color_mode=1):
 
         super(self.__class__, self).__init__()
