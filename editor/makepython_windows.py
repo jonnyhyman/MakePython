@@ -36,7 +36,6 @@ from utilities import get_usr_reg
 import __initwin__ as initwin
 from subprocess import Popen
 from PyQt5 import QtWidgets
-import platform
 import sys
 import os
 import time
@@ -47,18 +46,11 @@ def get_makepython_dir():
 
     print('looking for makepython.executable in path directories...')
 
-    if platform.system() == 'Windows':
-        path = get_usr_reg('PATH',r'Environment')
-
-    else:
-        path = os.environ['Path']
+    path = get_usr_reg('PATH',r'Environment')
 
     for folder in path.split(';'):
 
-        if platform.system() == 'Windows':
-            executable = '\\makepython.exe'
-        else:
-            executable = '\\makepython'
+        executable = '\\makepython.exe'
 
         print('trying :', folder + executable)
 
@@ -73,10 +65,7 @@ def get_makepython_dir():
 
     for folder in os.environ['Path'].split(';') + path.split(';') :
 
-        if platform.system() == 'Windows':
-            executable = '\\python.exe'
-        else:
-            executable = '\\python'
+        executable = '\\python.exe'
 
         print('trying :', folder + executable)
 
@@ -88,10 +77,7 @@ def get_makepython_dir():
             if os.path.isdir(folder + mk_pkg):
                 print('found makepython folder!',folder+mk_pkg)
 
-                if platform.system() == 'Windows':
-                    executable = '\\makepython.exe'
-                else:
-                    executable = '\\makepython'
+                executable = '\\makepython.exe'
 
                 if os.path.isfile(folder + mk_pkg + executable):
                     print('found makepython.exe!',folder + mk_pkg + executable)
