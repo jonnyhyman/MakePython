@@ -17,10 +17,10 @@
         <a href="{{ site.github.repository_url }}" class="btn">View on GitHub</a>
       {% endif %}
 
-      {% assign release_url = (site.github.latest_release.assets | where: "name" , "Make.Python.Installer.exe") %}
+      {% assign windows_installer = (site.github.latest_release.assets | where: "name" , "Make.Python.Installer.exe") %}
 
       {% if site.show_downloads %}
-        <a href="{{ release_url }}"
+        <a href="{{ windows_installer.browser_download_url }}"
         class="btn">Download Windows Installer</a>
       {% endif %}
     </section>
